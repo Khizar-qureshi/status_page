@@ -7,6 +7,9 @@ import os
 import time
 import requests
 from status_param import Https, status_data
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 
 def ping_vm_good(ip):
     response = os.system(f"ping -c 1 {ip}")
@@ -70,3 +73,72 @@ def update_status():
     status_data["login"]["status"] = login_status_info
 
     return home_status_info["status"] and register_status_info["status"] and login_status_info["status"]
+
+def signup_status():
+   return
+
+
+def valid_bot_password():
+   return Https.BOT["botname"] != None
+
+
+def check_register_status():
+   driver = webdriver.Chrome()
+   driver.get(Https.url_register)
+
+
+   username = driver.find_element(By.ID, 'newUserName')
+   username.send_keys(Https.BOT["botname"])
+   time.sleep(1)
+
+
+   signupcode = driver.find_element(By.ID, 'signUpCode')
+   signupcode.send_keys('Carleton comps 2024-2025!')
+   time.sleep(1)
+
+
+   submit = driver.find_element(By.ID, 'registerUserButton')
+   submit.click()
+   time.sleep(2)
+
+
+   password_block = driver.find_element(By.ID, 'passwordBlock')
+
+
+   if password_block.is_displayed():
+       generated_password = driver.find_element(By.ID, 'newPassword').get_attribute("value")
+       print("Registered account successfully, PASSWORD: ",generated_password)
+       Https.BOT["password"] = generated_password
+   else:
+       print("No password shown")
+   time.sleep(10)
+   driver.quit()
+
+
+def check_login_status():
+   driver = webdriver.Chrome()
+   driver.get(Https.url_login)
+
+   username = driver.find_element(By.ID, 'userName')
+   username.send_keys(Https.BOT["botname"])
+   time.sleep(1)
+
+   signupcode = driver.find_element(By.ID, 'password')
+   signupcode.send_keys(Https.BOT["password"])
+   time.sleep(1)
+
+   submit = driver.find_element(By.ID, 'loginButton')
+   submit.click()
+   time.sleep(2)
+
+   login_block = driver.find_element(By.ID, 'loginSuccess')
+
+
+   if login_block.is_displayed():
+       print("Login created successfully")
+   else:
+       print("Invalid login")
+   time.sleep(10)
+   driver.quit()
+
+check_login_status()

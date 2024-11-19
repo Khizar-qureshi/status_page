@@ -2,49 +2,48 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;  
+    justify-content: flex-start;
     height: 100vh;
     margin: 0;
-    background-color: #AEAFB1; 
+    background-color: #AEAFB1;
 }
 
 .title {
     text-align: center;
     font-size: 24px;
     margin-bottom: 20px;
-    font-family: Arial, Helvetica, sans-serif; 
-
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .issue_container, .healthy_container {
-    width: 500px; 
+    width: 500px;
     height: 35px;
     padding: 20px;
     text-align: center;
-    border-radius: 5px; 
-    margin: 10px 0; 
-    font-family: Arial, Helvetica, sans-serif; 
+    border-radius: 5px;
+    margin: 10px 0;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .issue_container {
     background-color: #FA5F5F;
-    color: #403F3F; 
+    color: #403F3F;
 }
 
 .healthy_container {
     background-color: #73D475;
-    color: #403F3F; 
+    color: #403F3F;
 }
 
-
 #component-table {
-    width: 50%; 
+    width: 50%;
     margin-top: 20px;
-    border-collapse: collapse; 
-    table-layout:fixed ;
+    border-collapse: collapse;
+    table-layout:fixed;
 }
 
 .cell {
+    position: relative;
     width: 150px;
     height: 75px;
     background-color: #D3D3D3;
@@ -64,7 +63,6 @@ body {
     text-align: center;
     color: #403F3F;
     margin-bottom: 5px;
-
 }
 
 .status-circle-healthy-container {
@@ -81,4 +79,81 @@ body {
     border-radius: 50%;
     margin-bottom: 5px;
     background-color: #FA5F5F;
+}
+
+.plus-button {
+    position: absolute;
+    bottom: 5px; 
+    right: 5px; 
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    color: #403F3F;
+    cursor: pointer;
+    z-index: 10;
+}
+
+
+#http_status_small {
+    position: relative;
+    padding: 10px;
+    background-color: #D3D3D3;
+    border-radius: 5px;
+    text-align: center;
+    margin: 10px 0;
+    font-family: Arial, Helvetica, sans-serif; 
+    font-size: 16px;
+}
+
+/* This is style for the pop up */
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center; 
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 300px; 
+    text-align: center;
+    position: relative;
+}
+
+.close-btn {
+    font-size: 30px;
+    color: #aaa;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 5px;  
+    right: 15px;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#status_text {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    font-size: 16px;
+    color: #403F3F;
+    margin: 10px 0;
+    padding: 10px;
+    white-space: pre-wrap; 
+    text-align: center;
 }

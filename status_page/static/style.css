@@ -16,7 +16,7 @@ body {
 
 }
 
-.issue_container, .current_status_container {
+.issue_container, .healthy_container {
     width: 500px; 
     height: 35px;
     padding: 20px;
@@ -24,8 +24,6 @@ body {
     border-radius: 5px; 
     margin: 10px 0; 
     font-family: Arial, Helvetica, sans-serif; 
-
-
 }
 
 .issue_container {
@@ -33,7 +31,54 @@ body {
     color: #403F3F; 
 }
 
-.current_status_container {
+.healthy_container {
     background-color: #73D475;
     color: #403F3F; 
+}
+
+
+#component-table {
+    width: 50%; 
+    margin-top: 20px;
+    border-collapse: collapse; 
+    table-layout:fixed ;
+}
+
+.cell {
+    width: 150px;
+    height: 75px;
+    background-color: #D3D3D3;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    flex-direction: column;
+    border-style: solid;
+    border-color:black;
+    border-width: thin;
+    text-align: center;
+}
+
+.component-name {
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    color: #403F3F;
+    margin-bottom: 5px;
+
+}
+
+.status-circle-healthy-container {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin-bottom: 5px;
+    background-color: #73D475;
+}
+
+.status-circle-issue-container {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin-bottom: 5px;
+    background-color: #FA5F5F;
 }

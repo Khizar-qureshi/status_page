@@ -9,12 +9,37 @@
 </head>
 <body>
     <h1 class = title>One Move Chess Status</h1>
-    <!-- 
-    <div class = "issue_container"> Any Active Issue </div>
-    <div class = "current_status_container"> Current Staus : Good </div>
-    -->
+    <div id = "overall_status" class = {{overall_status}}> Current Status </div>
     <div id="vm1_status" class={{vm1_status}}>VM1 Ping</div>
     <div id="vm2_status" class={{vm2_status}}>VM2 Ping</div>
     <div id="http_status" class={{http_status}}>HTTP Status</div>
+
+
+    <!-- 
+    Testing out styles to create the component table. ALL HARD-CODED
+    -->              
+    <table id="component-table">
+        <tr>
+            <!-- VM1 Col -->
+            <td class="cell">
+                <div class="component-name">VM1 Ping</div>
+                <div class={{vm1_status_circ}}></div>
+            </td>
+            <!-- VM2 Col -->
+            <td class="cell">
+                <div class="component-name">VM2 Ping</div>
+                <div class={{vm2_status_circ}}></div>
+            </td>
+        </tr>
+        <tr>   
+            <td class = "cell">
+                <div class = "component-name"> HTTPS Web UI</div>
+                <div class={{http_status_circ}}></div>
+            </td>
+        </tr>
+    </table>
+
+
+
 </body>
 </html>

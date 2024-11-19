@@ -38,3 +38,6 @@ def update_status():
     status_data["register"]["status"] = check_http_status(status_data["register"]["url"])
     status_data["login"]["status"] = check_http_status(status_data["login"]["url"])
     return status_data["home"]["status"] and status_data["register"]["status"] and status_data["login"]["status"]
+
+
+

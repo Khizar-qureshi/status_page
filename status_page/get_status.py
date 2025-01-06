@@ -141,4 +141,5 @@ def check_login_status():
    time.sleep(10)
    driver.quit()
 
-check_login_status()
+# include only if you want pop up:
+# check_login_status() 

@@ -22,21 +22,28 @@
         <tr>
             <td class="cell">
                 <div class="component-name">VM1 Ping</div>
-                <div class="{{vm1_status_circ}}"></div>
+                <div class="{{vm1_status_circ}}">
+                    {{ vm1_check_mark }}
+                </div>
             </td>
             <td class="cell">
                 <div class="component-name">VM2 Ping</div>
-                <div class="{{vm2_status_circ}}"></div>
+                <div class="{{vm2_status_circ}}">
+                    {{ vm2_check_mark }}
+                </div>
             </td>
         </tr>
         <tr>  
             <td class="cell">
                 <div class="component-name">HTTPS Web UI</div>
-                <div class="{{http_status_circ}}"></div>
+                <div class="{{http_status_circ}}">
+                    {{ http_check_mark }}
+                </div>
                 <button id="plus_button" class="plus-button" onclick="openModal()">+</button>
             </td>
         </tr>
     </table>
+    
 
     <div id="status_modal" class="modal">
         <div class="modal-content">

@@ -36,6 +36,17 @@ def home():
 
     return flask.render_template('index.html', **html_dict)
 
+@app.route('/status')
+def status():
+    get_status.update_status()
+    home_status = get_status.status_data["home"]["status"]
+    flask_status_code = home_status["code"]
+
+    data = {
+        "http_status_message": home_status["message"]
+    }
+
+    return jsonify(data), flask_status_code
 
 if __name__ == '__main__':
     app.run(debug = True)

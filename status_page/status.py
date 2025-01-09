@@ -16,10 +16,12 @@ def home():
     vm1_status_circ = 'status-circle-healthy-container' if get_status.ping_vm_good(IP.VM1_IP) else 'status-circle-issue-container'
     vm2_status_circ = 'status-circle-healthy-container' if get_status.ping_vm_good(IP.VM2_IP) else 'status-circle-issue-container'
     http_status_circ = 'status-circle-healthy-container' if get_status.update_status() else 'status-circle-issue-container'
+    login_status_circ = 'status-circle-healthy-container' if get_status.check_login_status() else 'status-cricle-issue-container'
 
     vm1_check_mark = "✓" if get_status.ping_vm_good(IP.VM1_IP) else "✘"
     vm2_check_mark = "✓" if get_status.ping_vm_good(IP.VM2_IP) else "✘"
     http_check_mark = "✓" if get_status.update_status() else "✘"
+    login_status_mark = "✓" if get_status.check_login_status() else "✘"
 
     html_dict = {
         'overall_status': overall_status,
@@ -29,9 +31,11 @@ def home():
         'vm1_status_circ': vm1_status_circ,
         'vm2_status_circ': vm2_status_circ,
         'http_status_circ': http_status_circ,
+        'login_status_circ': login_status_circ,
         'vm1_check_mark': vm1_check_mark,
         'vm2_check_mark': vm2_check_mark,
-        'http_check_mark': http_check_mark
+        'http_check_mark': http_check_mark,
+        'login_status_mark': login_status_mark
     }
 
     return flask.render_template('index.html', **html_dict)

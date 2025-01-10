@@ -149,30 +149,30 @@ def check_register_status():
 
 
 def check_login_status():
-   driver = webdriver.Chrome()
-   driver.get(Https.url_login)
+    driver = webdriver.Chrome()
+    driver.get(Https.url_login)
 
-   username = driver.find_element(By.ID, 'userName')
-   username.send_keys(Https.BOT["botname"])
-   time.sleep(1)
+    username = driver.find_element(By.ID, 'userName')
+    username.send_keys(Https.BOT["botname"])
+    time.sleep(1)
+    
+    signupcode = driver.find_element(By.ID, 'password')
+    signupcode.send_keys(Https.BOT["password"])
+    time.sleep(1)
+    submit = driver.find_element(By.ID, 'loginButton')
+    submit.click()
+    time.sleep(2)
+    login_block = driver.find_element(By.ID, 'accountLink')
 
-   signupcode = driver.find_element(By.ID, 'password')
-   signupcode.send_keys(Https.BOT["password"])
-   time.sleep(1)
-
-   submit = driver.find_element(By.ID, 'loginButton')
-   submit.click()
-   time.sleep(2)
-
-   login_block = driver.find_element(By.ID, 'loginSuccess')
-
-
-   if login_block.is_displayed():
-       print("Login created successfully")
-   else:
-       print("Invalid login")
-   time.sleep(10)
-   driver.quit()
+    if Https.BOT["botname"] in login_block.text:
+        print("Login created successfully")
+    else:
+        print("Invalid Login")
+        return False
+    #time.sleep(10)
+    driver.quit()
+    
+    return True
 
 # include only if you want pop up:
-# check_login_status() 
+#check_login_status() 

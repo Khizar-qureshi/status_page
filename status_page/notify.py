@@ -1,6 +1,11 @@
 import smtplib
 from email.mime.text import MIMEText
 
+#some sources of where I got information to do this:
+# https://realpython.com/python-send-email/
+# https://stackoverflow.com/questions/64505/sending-mail-from-python-using-smtp
+# https://mailtrap.io/blog/python-send-email/
+
 SMTP_SERVER = 'smtp.gmail.com'
 SMTP_PORT = 587
 USERNAME = 'chaoscompsnotify@gmail.com'       # This is the new email I created (where the notification will come from)

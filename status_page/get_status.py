@@ -10,6 +10,7 @@ from status_param import Https, status_data
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from notify import send_alert_email
 
 def ping_vm_good(ip):
     response = os.system(f"ping -c 1 {ip}")
@@ -63,7 +64,13 @@ def check_http_status(url: str):
             "final_url": None
         }
 
+# created a global variable to check if a message has already been sent.
+# I don't want it sending us emails constantly if something is down, just one is fine.
+prev_failed_services = set() 
+
 def update_status():
+    global prev_failed_services
+    
     home_status_info = check_http_status(status_data["home"]["url"])
     register_status_info = check_http_status(status_data["register"]["url"])
     login_status_info = check_http_status(status_data["login"]["url"])
@@ -72,7 +79,33 @@ def update_status():
     status_data["register"]["status"] = register_status_info
     status_data["login"]["status"] = login_status_info
 
-    return home_status_info["status"] and register_status_info["status"] and login_status_info["status"]
+    # this checks which parts are failing
+    failed_services = set()
+    if not home_status_info["status"]:
+        failed_services.add("home")
+    if not register_status_info["status"]:
+        failed_services.add("register")
+    if not login_status_info["status"]:
+        failed_services.add("login")
+
+
+    if failed_services != prev_failed_services:
+        if failed_services:
+            subject = "ALERT: Service Failures Detected"
+            details = []
+            for service in failed_services:
+                s = status_data[service]["status"]
+                details.append(f"{service.capitalize()} page error: {s['message']}")
+            body = "\n".join(details)
+            send_alert_email(subject, body)
+        else:
+            subject = "All services recovered"
+            body = "All services are now healthy."
+            send_alert_email(subject, body)
+
+        prev_failed_services = failed_services.copy()
+
+    return len(failed_services) == 0
 
 def signup_status():
    return

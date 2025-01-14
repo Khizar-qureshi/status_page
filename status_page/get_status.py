@@ -121,7 +121,7 @@ def check_register_status():
 
 
    username = driver.find_element(By.ID, 'newUserName')
-   username.send_keys(Https.BOT["botname"])
+   username.send_keys('BOT_TEST_REGISTER')
    time.sleep(1)
 
 
@@ -132,7 +132,7 @@ def check_register_status():
 
    submit = driver.find_element(By.ID, 'registerUserButton')
    submit.click()
-   time.sleep(2)
+   time.sleep(5)
 
 
    password_block = driver.find_element(By.ID, 'passwordBlock')
@@ -144,8 +144,13 @@ def check_register_status():
        Https.BOT["password"] = generated_password
    else:
        print("No password shown")
-   time.sleep(10)
+       time.sleep(2)
+       driver.quit()
+       return False
+   time.sleep(2)
    driver.quit()
+   
+   return True
 
 
 def check_login_status():
@@ -176,3 +181,4 @@ def check_login_status():
 
 # include only if you want pop up:
 #check_login_status() 
+#check_register_status()

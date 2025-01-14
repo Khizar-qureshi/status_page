@@ -5,19 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>One-Move Chess Status Page</title>
     <link rel="stylesheet" type="text/css" href="../static/style.css" />
-    <meta http-equiv="refresh" content="30">
+    <meta http-equiv="refresh" content="75">
 </head>
 <body>
     <h1 class = title>One Move Chess Status</h1>
-    <div id = "overall_status" class = {{overall_status}}> Current Status </div>
-    <div id="vm1_status" class={{vm1_status}}>VM1 Ping</div>
-    <div id="vm2_status" class={{vm2_status}}>VM2 Ping</div>
-    <div id="http_status" class={{http_status}}>HTTP Status</div>
 
-
-    <!-- 
-    Testing out styles to create the component table. ALL HARD-CODED
-    -->              
+    <div id = "overall_status" class = {{overall_status}}> Overall Current Status </div>
     <table id="component-table">
         <tr>
             <td class="cell">
@@ -47,6 +40,15 @@
                 <div class ="{{login_status_circ}}">
                     {{ login_status_mark }}
                 </div>
+        </tr>
+
+        <tr>
+            <td class="cell">
+                <div class="component-name">Register</div>
+                <div class ="{{register_status_circ}}">
+                    {{ register_check_mark }}
+                </div>
+            </td>
         </tr>
     </table>
     

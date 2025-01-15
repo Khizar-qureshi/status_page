@@ -24,6 +24,7 @@ def setup_driver():
     options.add_argument("--disable-backgrounding-occluded-windows")
     options.add_argument("--disable-renderer-backgrounding")
     options.add_argument("--start-maximized")
+    options.add_argument('ignore-certificate-errors')
     driver = webdriver.Chrome(options=options)
     return driver
 # def setup_driver():

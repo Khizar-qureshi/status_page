@@ -7,13 +7,27 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions as ECimport 
 from selenium.webdriver.support import expected_conditions as EC
 import pdb
 from utils.constants import Login, Time
 
 def setup_driver():
-    return webdriver.Chrome()
+    """
+    Set up and return the Selenium WebDriver with undetected_chromedriver and fake user-agent.
+    """
+    options = webdriver.ChromeOptions()
+    options.add_argument("--disable-blink-features=AutomationControlled")  # Avoid bot detection
+    options.add_argument("--disable-gpu")  # Disable GPU acceleration
+    options.add_argument("--disable-background-timer-throttling")  # Keep browser active
+    options.add_argument("--disable-backgrounding-occluded-windows")
+    options.add_argument("--disable-renderer-backgrounding")
+    options.add_argument("--start-maximized")
+    driver = webdriver.Chrome(options=options)
+    return driver
+# def setup_driver():
+#     return webdriver.Chrome()
 
 def save_cookies(driver, filename):
     """
@@ -76,10 +90,13 @@ def check_login_status():
         try:
             WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "chessBoard")))
             print("Chessboard Found")
-            player_to_move = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "/html/body/div/main/h2")))
             time.sleep(1)
-            if "White" in player_to_move.text:
-                print("White to move") 
+            player_to_move = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "/html/body/div/main/h2")))
+            print(player_to_move.text)
+            if "white" in player_to_move.text.lower():
+                print("White to Move") 
+                move = get_random_move()
+                make_move(driver, move)
             else:
                 print("Black to move")
         except:
@@ -88,6 +105,18 @@ def check_login_status():
     finally:
         driver.quit()
 
+def get_random_move():
+    return "a2a4"
+
+def make_move(driver, move: str):
+    start_move = move[0:2]
+    end_move = move[2:]
+    source_move = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, f"square-{start_move}")))
+    target_move = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, f"square-{end_move}")))
+    actions = ActionChains(driver)
+    actions.drag_and_drop(source_move,target_move).perform()
+
+    return
 def make_random_move():
     
     return

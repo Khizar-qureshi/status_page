@@ -8,6 +8,7 @@ import time
 import requests
 from status_param import Https, status_data
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from notify import send_alert_email
@@ -117,9 +118,9 @@ def valid_bot_password():
 
 def check_register_status():   
     try:
-        options = webdriver.ChromeOptions()
-        options.add_argument('ignore-certificate-errors')
-        driver = webdriver.Chrome(chrome_options=options)
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('ignore-certificate-errors')
+        driver = webdriver.Chrome(options=chrome_options)
         driver.get(Https.url_register)
         username = driver.find_element(By.ID, 'newUserName')
         username.send_keys('BOT_TEST_REGISTER')
@@ -152,9 +153,9 @@ def check_register_status():
 
 def check_login_status():
     try:
-        options = webdriver.ChromeOptions()
-        options.add_argument('ignore-certificate-errors')
-        driver = webdriver.Chrome(chrome_options=options)
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('ignore-certificate-errors')
+        driver = webdriver.Chrome(options=chrome_options)
         driver.get(Https.url_login)
 
         username = driver.find_element(By.ID, 'userName')

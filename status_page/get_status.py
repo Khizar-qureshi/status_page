@@ -116,8 +116,10 @@ def valid_bot_password():
 
 
 def check_register_status():   
-    try: 
-        driver = webdriver.Chrome()
+    try:
+        options = webdriver.ChromeOptions()
+        options.add_argument('ignore-certificate-errors')
+        driver = webdriver.Chrome(chrome_options=options)
         driver.get(Https.url_register)
         username = driver.find_element(By.ID, 'newUserName')
         username.send_keys('BOT_TEST_REGISTER')
@@ -150,7 +152,9 @@ def check_register_status():
 
 def check_login_status():
     try:
-        driver = webdriver.Chrome()
+        options = webdriver.ChromeOptions()
+        options.add_argument('ignore-certificate-errors')
+        driver = webdriver.Chrome(chrome_options=options)
         driver.get(Https.url_login)
 
         username = driver.find_element(By.ID, 'userName')

@@ -11,7 +11,7 @@ def home():
     vm1_status_circ = 'status-circle-healthy-container' if get_status.ping_vm_good(IP.VM1_IP) else 'status-circle-issue-container'
     vm2_status_circ = 'status-circle-healthy-container' if get_status.ping_vm_good(IP.VM2_IP) else 'status-circle-issue-container'
     http_status_circ = 'status-circle-healthy-container' if get_status.update_status() else 'status-circle-issue-container'
-    login_status_circ = 'status-circle-healthy-container' if get_status.check_login_status() else 'status-circle-issue-container'
+    login_status_circ = 'status-circle-healthy-container' if get_status.check_login_status()['status'] else 'status-circle-issue-container'
     register_status_circ = 'status-circle-healthy-container' if get_status.check_register_status() else 'status-circle-issue-container'
     overall_status = 'issue_container' if 'issue' in vm1_status_circ or 'issue' in vm2_status_circ or 'issue' in http_status_circ or 'issue' in login_status_circ or 'issue' in register_status_circ else 'healthy_container'
 

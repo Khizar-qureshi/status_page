@@ -5,38 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>One-Move Chess Status Page</title>
     <link rel="stylesheet" type="text/css" href="../static/style.css" />
-    <meta http-equiv="refresh" content="30">
+    <meta http-equiv="refresh" content="75">
 </head>
 <body>
     <h1 class = title>One Move Chess Status</h1>
-    <div id = "overall_status" class = {{overall_status}}> Current Status </div>
-    <div id="vm1_status" class={{vm1_status}}>VM1 Ping</div>
-    <div id="vm2_status" class={{vm2_status}}>VM2 Ping</div>
-    <div id="http_status" class={{http_status}}>HTTP Status</div>
 
-
-    <!-- 
-    Testing out styles to create the component table. ALL HARD-CODED
-    -->              
+    <div id = "overall_status" class = {{overall_status}}> Overall Current Status </div>
     <table id="component-table">
         <tr>
             <td class="cell">
                 <div class="component-name">VM1 Ping</div>
-                <div class="{{vm1_status_circ}}"></div>
+                <div class="{{vm1_status_circ}}">
+                    {{ vm1_check_mark }}
+                </div>
             </td>
             <td class="cell">
                 <div class="component-name">VM2 Ping</div>
-                <div class="{{vm2_status_circ}}"></div>
+                <div class="{{vm2_status_circ}}">
+                    {{ vm2_check_mark }}
+                </div>
             </td>
         </tr>
         <tr>  
             <td class="cell">
                 <div class="component-name">HTTPS Web UI</div>
-                <div class="{{http_status_circ}}"></div>
+                <div class="{{http_status_circ}}">
+                    {{ http_check_mark }}
+                </div>
                 <button id="plus_button" class="plus-button" onclick="openModal()">+</button>
+            </td>
+
+            <td class ="cell">
+                <div class="component-name">Login</div>
+                <div class ="{{login_status_circ}}">
+                    {{ login_status_mark }}
+                </div>
+        </tr>
+
+        <tr>
+            <td class="cell">
+                <div class="component-name">Register</div>
+                <div class ="{{register_status_circ}}">
+                    {{ register_check_mark }}
+                </div>
             </td>
         </tr>
     </table>
+    
 
     <div id="status_modal" class="modal">
         <div class="modal-content">
@@ -47,18 +62,17 @@
     </div>
 
     <script>
-        // Open the modal
         function openModal() {
             fetch('/status')
                 .then(response => response.json())
                 .then(data => {
-                    const statusMessage = data.http_status_message || "No status available";
-                    
-                    document.getElementById('status_text').innerText = statusMessage;
+                    document.getElementById('status_text').innerText = data.http_status_message;
                     document.getElementById('status_modal').style.display = 'flex';
                 })
                 .catch(error => {
                     console.error('Error fetching status:', error);
+                    document.getElementById('status_text').innerText = "Failed to fetch status.";
+                    document.getElementById('status_modal').style.display = 'flex';
                 });
         }
 

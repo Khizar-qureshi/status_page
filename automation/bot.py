@@ -120,26 +120,42 @@ def make_random_move(driver):
         return True
     return False
 
-def check_login_status():
+def check_board_status():
     driver = setup_driver()
-    login_to_game(driver)
     try:
+        login_to_game(driver)
         driver.get("http://onemovechess-web.northcentralus.cloudapp.azure.com/Chess")
         try:
             WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "chessBoard")))
-            print("Chessboard Found")
+            board_message = "Chessboard Successfully Loaded"
+            print(board_message)
             time.sleep(1)
-            player_to_move = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "/html/body/div/main/h2")))
-            print(player_to_move.text)
+
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "/html/body/div/main/h2")))
             new_board_assigned = True
             while new_board_assigned:
-                make_random_move(driver)
+                try:
+                    make_random_move(driver)
+                    board_message = "Successfully Moved Chess Pieces"
+                    return get_chessboard_status(True, True, board_message)
+                except:
+                    board_message = "Loaded board but Failed to Move Chess Pieces"
+                    return get_chessboard_status(True, False, board_message)
                 print("starting in 30 seconds")
                 time.sleep(30)
         except:
-            print("Chess Board not found")
+            board_message = "Board Allocation Failed"
+            print(board_message)
+            return get_chessboard_status(False, False, board_message)
         pdb.set_trace()
     finally:
         driver.quit()
 
-check_login_status()
+def get_chessboard_status(board_status: bool, chess_move_status: bool, message: str) -> dict:
+    return {
+        "board_status": board_status,
+        "chess_move_status": chess_move_status,
+        "message": message
+    } 
+ 
+check_board_status()

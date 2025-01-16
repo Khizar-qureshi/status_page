@@ -83,6 +83,43 @@ def login_to_game(driver):
     else:
         print("Invalid login")
 
+def find_first_move(driver):
+    squares = driver.find_elements(By.XPATH, "//div[contains(@class, 'square')]")
+    print(f"Number of squares found: {len(squares)}")
+
+    for square in squares:
+        ActionChains(driver).move_to_element(square).perform()
+        background_color = driver.execute_script("return window.getComputedStyle(arguments[0]).getPropertyValue('background-color');", square)
+        print(background_color)
+        if background_color == "rgb(169, 169, 169)" or background_color == "rgb(105, 105, 105)":
+            print(f"Square: {square.get_attribute('class')}, Background color: {background_color}")
+            target_square = get_drag_location(driver, square)
+            return square, target_square
+    return None, None
+
+def get_drag_location(driver, start_square):
+    squares = driver.find_elements(By.XPATH, "//div[contains(@class, 'square')]")
+    for square in squares:
+        background_color = driver.execute_script(
+            "return window.getComputedStyle(arguments[0]).getPropertyValue('background-color');", square
+        )
+        print(f"Square: {square.get_attribute('class')}, Background color: {background_color}")
+        if (background_color == "rgb(105, 105, 105)" or background_color == "rgb(169, 169, 169)") and start_square != square:
+            print("Found draging location")
+            return square
+    return None
+
+def make_random_move(driver):
+    start_square, target_square = find_first_move(driver)
+    if start_square == None or target_square == None:
+        print("No possible moves found!")
+    else:
+        print("dragging")
+        ActionChains(driver).drag_and_drop(start_square, target_square).perform()
+        print("Move performed!")
+        return True
+    return False
+
 def check_login_status():
     driver = setup_driver()
     login_to_game(driver)
@@ -94,32 +131,15 @@ def check_login_status():
             time.sleep(1)
             player_to_move = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "/html/body/div/main/h2")))
             print(player_to_move.text)
-            if "white" in player_to_move.text.lower():
-                print("White to Move") 
-                move = get_random_move()
-                make_move(driver, move)
-            else:
-                print("Black to move")
+            new_board_assigned = True
+            while new_board_assigned:
+                make_random_move(driver)
+                print("starting in 30 seconds")
+                time.sleep(30)
         except:
             print("Chess Board not found")
         pdb.set_trace()
     finally:
         driver.quit()
-
-def get_random_move():
-    return "a2a4"
-
-def make_move(driver, move: str):
-    start_move = move[0:2]
-    end_move = move[2:]
-    source_move = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, f"square-{start_move}")))
-    target_move = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, f"square-{end_move}")))
-    actions = ActionChains(driver)
-    actions.drag_and_drop(source_move,target_move).perform()
-
-    return
-def make_random_move():
-    
-    return
 
 check_login_status()

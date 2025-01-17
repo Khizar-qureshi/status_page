@@ -6,6 +6,7 @@ Returns status of One Move Chess Components
 import os
 import time
 import requests
+import sys
 from status_param import Https, status_data
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -19,7 +20,35 @@ def ping_vm_good(ip):
         return True
     else:
         return False
+
+def check_vm1_systemd
+    systemd_running = os.system("ssh azureuser@onemovechess-api.eastus2.cloudapp.azure.com pgrep -l systemd || true")
+    if systemd_running == 0:
+        return True
+    else:
+        return False
     
+def check_vm2_systemd
+    systemd_running = os.system("ssh azureuser@onemovechess-web.northcentralus.cloudapp.azure.com pgrep -l systemd || true")
+    if systemd_running == 0:
+        return True
+    else:
+        return False
+
+def check_vm1_dotnet_running
+    dotnet_running = os.system("ssh azureuser@onemovechess-api.eastus2.cloudapp.azure.com pgrep -l dotnet || true")
+    if dotnet_running == 0:
+        return True
+    else:
+        return False
+
+def check_vm2_dotnet_running
+    dotnet_running = os.system("ssh azureuser@onemovechess-web.northcentralus.cloudapp.azure.com pgrep -l dotnet || true")
+    if dotnet_running == 0:
+        return True
+    else:
+        return False
+
 def check_http_status(url: str):
     try:
         session = requests.Session()

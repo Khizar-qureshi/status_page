@@ -121,8 +121,11 @@ def check_register_status():
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('--ignore-certificate-errors')
         chrome_options.add_argument('--ignore-ssl-errors=yes')
+        chrome_options.add_argument('--allow-insecure-localhost')
+        chrome_options.add_argument('--unsafely-treat-insecure-origin-as-secure=http://onemovechess-web.northcentralus.cloudapp.azure.com/')
         driver = webdriver.Chrome(options=chrome_options)
         driver.get(Https.url_register)
+
         username = driver.find_element(By.ID, 'newUserName')
         username.send_keys('BOT_TEST_REGISTER')
         time.sleep(1)
@@ -157,6 +160,8 @@ def check_login_status():
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('--ignore-certificate-errors')
         chrome_options.add_argument('--ignore-ssl-errors=yes')
+        chrome_options.add_argument('--allow-insecure-localhost')
+        chrome_options.add_argument('--unsafely-treat-insecure-origin-as-secure=http://onemovechess-web.northcentralus.cloudapp.azure.com/')
         driver = webdriver.Chrome(options=chrome_options)
         driver.get(Https.url_login)
 

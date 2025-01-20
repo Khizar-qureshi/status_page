@@ -8,8 +8,10 @@ import time
 import csv
 import pandas as pd
 import requests
+import sys
 from status_param import Https, status_data
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from notify import send_alert_email
@@ -18,10 +20,42 @@ from collections import deque
 def ping_vm_good(ip):
     response = os.system(f"ping -c 1 {ip}")
     if response == 0:
+        return {"status": True,
+                "message": "VM is running with No errors"
+                }
+    else:
+        return {"status": False,
+                "message": "VM is running with No errors"
+                }
+
+def check_vm1_systemd():
+    systemd_running = os.system("ssh azureuser@onemovechess-api.eastus2.cloudapp.azure.com pgrep -l systemd || true")
+    if systemd_running == 0:
         return True
     else:
         return False
     
+def check_vm2_systemd():
+    systemd_running = os.system("ssh azureuser@onemovechess-web.northcentralus.cloudapp.azure.com pgrep -l systemd || true")
+    if systemd_running == 0:
+        return True
+    else:
+        return False
+
+def check_vm1_dotnet_running():
+    dotnet_running = os.system("ssh azureuser@onemovechess-api.eastus2.cloudapp.azure.com pgrep -l dotnet || true")
+    if dotnet_running == 0:
+        return True
+    else:
+        return False
+
+def check_vm2_dotnet_running():
+    dotnet_running = os.system("ssh azureuser@onemovechess-web.northcentralus.cloudapp.azure.com pgrep -l dotnet || true")
+    if dotnet_running == 0:
+        return True
+    else:
+        return False
+
 def check_http_status(url: str):
     try:
         session = requests.Session()
@@ -154,86 +188,102 @@ def get_status_history(days: int) -> list:
       
 
 def signup_status():
-   return
+    return
 
 
 def valid_bot_password():
-   return Https.BOT["botname"] != None
+    return Https.BOT["botname"] != None
 
 
-def check_register_status():
-    driver = webdriver.Chrome()
-    driver.get(Https.url_register)
+def check_register_status():   
+    try:
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('--ignore-certificate-errors')
+        chrome_options.add_argument('--ignore-ssl-errors=yes')
+        chrome_options.add_argument('--allow-insecure-localhost')
+        chrome_options.add_argument('--unsafely-treat-insecure-origin-as-secure=http://onemovechess-web.northcentralus.cloudapp.azure.com/')
+        driver = webdriver.Chrome(options=chrome_options)
+        driver.get(Https.url_register)
 
-
-    username = driver.find_element(By.ID, 'newUserName')
-    username.send_keys(Https.BOT["botname"])
-    time.sleep(1)
-
-
-    signupcode = driver.find_element(By.ID, 'signUpCode')
-    signupcode.send_keys('Carleton comps 2024-2025!')
-    time.sleep(1)
-
-
-    submit = driver.find_element(By.ID, 'registerUserButton')
-    submit.click()
-    time.sleep(2)
-
-
-    password_block = driver.find_element(By.ID, 'passwordBlock')
-
-
-    if password_block.is_displayed():
-       generated_password = driver.find_element(By.ID, 'newPassword').get_attribute("value")
-       print("Registered account successfully, PASSWORD: ",generated_password)
-       Https.BOT["password"] = generated_password
-    else:
-        print("No password shown")
-        return {
-            "status": False,
-            "message": "No password shown"
-        }
-    time.sleep(10)
-    driver.quit()
-
-    return {
-        "status": True,
-        "message": "Registered account successfully"
-    }
-
+        username = driver.find_element(By.ID, 'newUserName')
+        username.send_keys('BOT_TEST_REGISTER')
+        time.sleep(1)
+        signupcode = driver.find_element(By.ID, 'signUpCode')
+        signupcode.send_keys('Carleton comps 2024-2025!')
+        time.sleep(1)
+        
+        submit = driver.find_element(By.ID, 'registerUserButton')
+        submit.click()
+        time.sleep(5)
+        
+        password_block = driver.find_element(By.ID, 'passwordBlock')
+        if password_block.is_displayed():
+            generated_password = driver.find_element(By.ID, 'newPassword').get_attribute("value")
+            print("Registered account successfully, PASSWORD: ",generated_password)
+            Https.BOT["password"] = generated_password
+        else:
+            print("No password shown")
+            time.sleep(2)
+            driver.quit()
+            return {"status": False,
+                    "message": "Registration Failed. Errror: No password shown"}
+        time.sleep(2)
+        driver.quit()
+        return {"status": True,
+                "message": "Registration Successful"
+            }
+    except Exception as e:
+        print(e)
+        driver.quit()
+        return {"status": False,
+                "message": f'Register Bot Failed. Error: {e}'}
+    
 
 def check_login_status():
-    driver = webdriver.Chrome()
-    driver.get(Https.url_login)
+    try:
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('--ignore-certificate-errors')
+        chrome_options.add_argument('--ignore-ssl-errors=yes')
+        chrome_options.add_argument('--allow-insecure-localhost')
+        chrome_options.add_argument('--unsafely-treat-insecure-origin-as-secure=http://onemovechess-web.northcentralus.cloudapp.azure.com/')
+        driver = webdriver.Chrome(options=chrome_options)
+        driver.get(Https.url_login)
 
-    username = driver.find_element(By.ID, 'userName')
-    username.send_keys(Https.BOT["botname"])
-    time.sleep(1)
-    
-    signupcode = driver.find_element(By.ID, 'password')
-    signupcode.send_keys(Https.BOT["password"])
-    time.sleep(1)
-    submit = driver.find_element(By.ID, 'loginButton')
-    submit.click()
-    time.sleep(2)
-    login_block = driver.find_element(By.ID, 'accountLink')
+        username = driver.find_element(By.ID, 'userName')
+        username.send_keys(Https.BOT["botname"])
+        time.sleep(1)
+        
+        signupcode = driver.find_element(By.ID, 'password')
+        signupcode.send_keys(Https.BOT["password"])
+        time.sleep(1)
+        submit = driver.find_element(By.ID, 'loginButton')
+        submit.click()
+        time.sleep(2)
+        login_block = driver.find_element(By.ID, 'accountLink')
 
-    if Https.BOT["botname"] in login_block.text:
-        print("Login created successfully")
-    else:
-        print("Invalid Login")
+        if Https.BOT["botname"] in login_block.text:
+            print("Login created successfully")
+        else:
+            print("Invalid Login")
+            return {
+                "status":False,
+                "message": "Login Unsuccessful",
+                }
+        #time.sleep(10)
+        driver.quit()
+        
         return {
-            "status": False,
-            "message": "Invalid Login"
+            "status": True,
+            "message": "Login Successful",
         }
-    #time.sleep(10)
-    driver.quit()
-    
-    return {
-        "status": True,
-        "message": "Login created successfully"
-    }
+    except Exception as e:
+        print(e)
+        return {
+            "status":False,
+            "message": f'Login Bot Unsuccessful Error: {e}',
+        }
+        
 
 # include only if you want pop up:
 #check_login_status() 
+#check_register_status()

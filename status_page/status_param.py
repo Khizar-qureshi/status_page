@@ -5,7 +5,7 @@ class Https:
     url_home= "http://onemovechess-web.northcentralus.cloudapp.azure.com/"
     url_register= "http://onemovechess-web.northcentralus.cloudapp.azure.com/Register"
     url_login= "http://onemovechess-web.northcentralus.cloudapp.azure.com/login"
-    BOT = {"botname": "testbot2", "password": "nL12^Cj3P=rcMq1Sw4Dq%!p2"}
+    BOT = {"botname": "testbot2", "password": "O-u+dw7e2O960Yjq=ZJ$-^4e"}
 
 @dataclass
 class IP:

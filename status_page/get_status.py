@@ -17,32 +17,36 @@ from notify import send_alert_email
 def ping_vm_good(ip):
     response = os.system(f"ping -c 1 {ip}")
     if response == 0:
-        return True
+        return {"status": True,
+                "message": "VM is running with No errors"
+                }
     else:
-        return False
+        return {"status": False,
+                "message": "VM is running with No errors"
+                }
 
-def check_vm1_systemd
+def check_vm1_systemd():
     systemd_running = os.system("ssh azureuser@onemovechess-api.eastus2.cloudapp.azure.com pgrep -l systemd || true")
     if systemd_running == 0:
         return True
     else:
         return False
     
-def check_vm2_systemd
+def check_vm2_systemd():
     systemd_running = os.system("ssh azureuser@onemovechess-web.northcentralus.cloudapp.azure.com pgrep -l systemd || true")
     if systemd_running == 0:
         return True
     else:
         return False
 
-def check_vm1_dotnet_running
+def check_vm1_dotnet_running():
     dotnet_running = os.system("ssh azureuser@onemovechess-api.eastus2.cloudapp.azure.com pgrep -l dotnet || true")
     if dotnet_running == 0:
         return True
     else:
         return False
 
-def check_vm2_dotnet_running
+def check_vm2_dotnet_running():
     dotnet_running = os.system("ssh azureuser@onemovechess-web.northcentralus.cloudapp.azure.com pgrep -l dotnet || true")
     if dotnet_running == 0:
         return True
@@ -175,13 +179,18 @@ def check_register_status():
             print("No password shown")
             time.sleep(2)
             driver.quit()
-            return False
+            return {"status": False,
+                    "message": "Registration Failed. Errror: No password shown"}
         time.sleep(2)
         driver.quit()
-        return True
+        return {"status": True,
+                "message": "Registration Successful"
+            }
     except Exception as e:
         print(e)
-        return False
+        driver.quit()
+        return {"status": False,
+                "message": f'Register Bot Failed. Error: {e}'}
     
 
 def check_login_status():

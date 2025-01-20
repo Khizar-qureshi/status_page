@@ -38,7 +38,7 @@ def home():
         'http_check_mark': http_check_mark,
         'login_status_mark': login_check_mark,
         'register_status_circ': register_status_circ,
-        'register_check_mark': register_check_mark,,
+        'register_check_mark': register_check_mark,
         'status_history_list': status_history_list,
         'status_history_list_length': status_history_list_length,
         'status_history_percentage': status_history_percentage,

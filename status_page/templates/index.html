@@ -9,6 +9,21 @@
 </head>
 <body>
     <h1 class = title>One Move Chess Status</h1>
+
+    <div class="uptime_container">
+        <div class = "uptime_box">
+            {% for status in status_history_list %}
+            <div class="uptime_day {{ 'true' if status else 'false' }}">
+                <span class="uptime_tooltip">Testing Tooltip: Info about that day</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="uptime_legend">
+            <p>{{status_history_percentage}}% uptime in the past {{status_history_list_length}} days</p>
+        </div>
+    </div>
+
     <div id = "overall_status" class = {{overall_status}}> Current Status </div>
     <div id="vm1_status" class={{vm1_status}}>VM1 Ping</div>
     <div id="vm2_status" class={{vm2_status}}>VM2 Ping</div>

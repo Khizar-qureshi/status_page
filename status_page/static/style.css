@@ -15,6 +15,78 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+
+.uptime_container {
+    width: 80%;
+    margin: 17px auto; /* Add margin around the entire container */
+    padding: 10px; /* Add some padding inside the container */
+    border: 1px solid #372424; /* Optional border for visual separation */
+    border-radius: 10px; /* Rounded corners */
+    text-align: center; /* Center align the content */
+}
+
+/* Container for the row */
+.uptime_box {
+    display: flex;
+    justify-content: space-around; /* Evenly space out squares */
+    align-items: center;
+    width: 80%; /* Row width as a percentage of the screen */
+    margin: 20px auto; /* Center row horizontally */
+    height: 50px; /* Fixed height for the row */
+}
+
+.uptime_tooltip {
+    visibility: hidden; /* Hide tooltip by default */
+    background-color: black; /* Tooltip background color */
+    color: white; /* Tooltip text color */
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute; /* Position tooltip relative to the square */
+    bottom: 110%; /* Position above the square */
+    left: 50%; /* Center the tooltip */
+    transform: translateX(-50%);
+    white-space: nowrap; /* Prevent text wrapping */
+    z-index: 1; /* Ensure it appears above other elements */
+    opacity: 0; /* Make it invisible initially */
+    transition: opacity 0.2s; /* Smooth transition for visibility */
+}
+
+/* Individual square styles */
+.uptime_day {
+    flex-grow: 1; /* Allow squares to grow and shrink */
+    margin: 0 5px; /* Space between squares */
+    height: 100%; /* Squares should fill the row's height */
+    max-width: 100px; /* Set a maximum width for squares */
+    min-width: 5px; /* Set a minimum width for squares */
+    border-radius: 5px;
+    position: relative;
+
+}
+
+/* Colors for true/false */
+.uptime_day.true {
+    background-color: #73D475;
+}
+
+.uptime_day.false {
+    background-color: #FA5F5F;
+}
+
+.uptime_legend {
+    margin-top: 20px; /* Space above the legend */
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Show the tooltip on hover */
+.uptime_day:hover .uptime_tooltip {
+    visibility: visible;
+    opacity: 1; /* Make tooltip visible */
+}
+
+
 .issue_container, .healthy_container {
     width: 500px;
     height: 35px;

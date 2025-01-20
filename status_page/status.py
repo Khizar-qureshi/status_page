@@ -8,6 +8,11 @@ app = flask.Flask(__name__, static_folder='static', template_folder='templates')
 
 @app.route('/') 
 def home():
+
+    status_history_list = get_status.get_status_history(12)
+    status_history_list_length = len(status_history_list)
+    status_history_percentage = round((sum(status_history_list) / status_history_list_length) * 100, 2) if status_history_list_length > 0 else 0
+
     vm1_status = 'healthy_container' if get_status.ping_vm_good(IP.VM1_IP) else 'issue_container'
     vm2_status = 'healthy_container' if get_status.ping_vm_good(IP.VM2_IP) else 'issue_container'
     http_status = 'healthy_container' if get_status.update_status() else 'issue_container'
@@ -35,7 +40,10 @@ def home():
         'vm1_check_mark': vm1_check_mark,
         'vm2_check_mark': vm2_check_mark,
         'http_check_mark': http_check_mark,
-        'login_status_mark': login_status_mark
+        'login_status_mark': login_status_mark,
+        'status_history_list': status_history_list,
+        'status_history_list_length': status_history_list_length,
+        'status_history_percentage': status_history_percentage,
     }
 
     return flask.render_template('index.html', **html_dict)

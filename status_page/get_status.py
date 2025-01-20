@@ -5,12 +5,15 @@ Returns status of One Move Chess Components
 
 import os
 import time
+import csv
+import pandas as pd
 import requests
 from status_param import Https, status_data
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from notify import send_alert_email
+from collections import deque
 
 def ping_vm_good(ip):
     response = os.system(f"ping -c 1 {ip}")
@@ -70,10 +73,9 @@ prev_failed_services = set()
 
 def update_status():
     global prev_failed_services
-    
     home_status_info = check_http_status(status_data["home"]["url"])
-    register_status_info = check_http_status(status_data["register"]["url"])
-    login_status_info = check_http_status(status_data["login"]["url"])
+    register_status_info = check_register_status()
+    login_status_info = check_login_status()
 
     status_data["home"]["status"] = home_status_info
     status_data["register"]["status"] = register_status_info
@@ -88,7 +90,26 @@ def update_status():
     if not login_status_info["status"]:
         failed_services.add("login")
 
+    # Update status history (status_history.csv)
+    # Updates the history CSV to reflect a failure on the status page history 
+    # Also adds a new row in the history CSV when a new day starts
+    df = pd.read_csv("status_history.csv")
+    current_time = time.time()
+    last_entry_time = df.at[0, "start_of_day"]
+    if current_time >= last_entry_time + 86400:
+        new_default_row = pd.DataFrame({
+            "start_of_day": [last_entry_time + 86400], 
+            "status": [1]
+            })
+        df = pd.concat([new_default_row, df], ignore_index=True)
+        df.to_csv("status_history.csv", index=False)
+        df = pd.read_csv("status_history.csv")
+    if failed_services:
+        df.at[0, "status"] = 0
+        df.to_csv("status_history.csv", index=False) 
+    # End of status history code
 
+    # Emailing service
     if failed_services != prev_failed_services:
         if failed_services:
             subject = "ALERT: Service Failures Detected"
@@ -107,6 +128,31 @@ def update_status():
 
     return len(failed_services) == 0
 
+
+def get_status_history(days: int) -> list:
+    '''
+    days: number of days worth of statuses to retrieve
+    '''
+    return_queue = deque([])
+    with open("status_history.csv", 'r') as csvfile:
+        reader = csv.reader(csvfile)
+        header = next(reader) # skip the header
+        row_count = sum(1 for row in reader)
+        if days > row_count: 
+            days = row_count
+        
+        csvfile.seek(0) # Put reader back to start
+        header = next(reader) # skip header
+
+        for row in range(days):
+            status = bool(int(next(reader)[1]))  # csv stores status as 0 or 1
+            return_queue.appendleft(status)
+
+    return list(return_queue)
+    
+
+      
+
 def signup_status():
    return
 
@@ -116,36 +162,45 @@ def valid_bot_password():
 
 
 def check_register_status():
-   driver = webdriver.Chrome()
-   driver.get(Https.url_register)
+    driver = webdriver.Chrome()
+    driver.get(Https.url_register)
 
 
-   username = driver.find_element(By.ID, 'newUserName')
-   username.send_keys(Https.BOT["botname"])
-   time.sleep(1)
+    username = driver.find_element(By.ID, 'newUserName')
+    username.send_keys(Https.BOT["botname"])
+    time.sleep(1)
 
 
-   signupcode = driver.find_element(By.ID, 'signUpCode')
-   signupcode.send_keys('Carleton comps 2024-2025!')
-   time.sleep(1)
+    signupcode = driver.find_element(By.ID, 'signUpCode')
+    signupcode.send_keys('Carleton comps 2024-2025!')
+    time.sleep(1)
 
 
-   submit = driver.find_element(By.ID, 'registerUserButton')
-   submit.click()
-   time.sleep(2)
+    submit = driver.find_element(By.ID, 'registerUserButton')
+    submit.click()
+    time.sleep(2)
 
 
-   password_block = driver.find_element(By.ID, 'passwordBlock')
+    password_block = driver.find_element(By.ID, 'passwordBlock')
 
 
-   if password_block.is_displayed():
+    if password_block.is_displayed():
        generated_password = driver.find_element(By.ID, 'newPassword').get_attribute("value")
        print("Registered account successfully, PASSWORD: ",generated_password)
        Https.BOT["password"] = generated_password
-   else:
-       print("No password shown")
-   time.sleep(10)
-   driver.quit()
+    else:
+        print("No password shown")
+        return {
+            "status": False,
+            "message": "No password shown"
+        }
+    time.sleep(10)
+    driver.quit()
+
+    return {
+        "status": True,
+        "message": "Registered account successfully"
+    }
 
 
 def check_login_status():
@@ -168,11 +223,17 @@ def check_login_status():
         print("Login created successfully")
     else:
         print("Invalid Login")
-        return False
+        return {
+            "status": False,
+            "message": "Invalid Login"
+        }
     #time.sleep(10)
     driver.quit()
     
-    return True
+    return {
+        "status": True,
+        "message": "Login created successfully"
+    }
 
 # include only if you want pop up:
 #check_login_status() 

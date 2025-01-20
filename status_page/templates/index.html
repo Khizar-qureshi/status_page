@@ -18,12 +18,14 @@
                 <div class="{{vm1_status_circ}}">
                     {{ vm1_check_mark }}
                 </div>
+                <button id="plus_button" class="plus-button" onclick="openModal(vm1)">+</button>
             </td>
             <td class="cell">
                 <div class="component-name">VM2 Ping</div>
                 <div class="{{vm2_status_circ}}">
                     {{ vm2_check_mark }}
                 </div>
+                <button id="plus_button" class="plus-button" onclick="openModal(vm2)">+</button>
             </td>
         </tr>
         <tr>  
@@ -32,7 +34,7 @@
                 <div class="{{http_status_circ}}">
                     {{ http_check_mark }}
                 </div>
-                <button id="plus_button" class="plus-button" onclick="openModal()">+</button>
+                <button id="plus_button" class="plus-button" onclick="openModal(HTTPS)">+</button>
             </td>
 
             <td class ="cell">
@@ -40,6 +42,8 @@
                 <div class ="{{login_status_circ}}">
                     {{ login_status_mark }}
                 </div>
+                <button id="plus_button" class="plus-button" onclick="openModal(Login)">+</button>
+
         </tr>
 
         <tr>
@@ -48,6 +52,7 @@
                 <div class ="{{register_status_circ}}">
                     {{ register_check_mark }}
                 </div>
+                <button id="plus_button" class="plus-button" onclick="openModal(Register)">+</button>
             </td>
         </tr>
     </table>
@@ -56,16 +61,38 @@
     <div id="status_modal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2>HTTP Status Info</h2>
+            <h2>Status Info</h2>
             <div id="status_text"></div> 
+            <button id="plus_button" class="plus-button" onclick="openModal()">+</button>
         </div>
     </div>
 
     <script>
-        function openModal() {
+
+        function openModal(component) {
             fetch('/status')
                 .then(response => response.json())
                 .then(data => {
+                    let message = '';
+                    switch (component) {
+                        case 'vm1':
+                            //message = data.vm1_status_message;
+                            break;
+                        case 'vm2':
+                            //message = data.vm2_status_message;
+                            break;
+                        case 'http':
+                            //message = data.http_status_message;
+                            break;
+                        case 'login':
+                            //message = data.login_status_message;
+                            break;
+                        case 'register':
+                            //message = data.register_status_message;
+                            break;
+                        default:
+                           // message = 'No status for component.';
+                    }
                     document.getElementById('status_text').innerText = data.http_status_message;
                     document.getElementById('status_modal').style.display = 'flex';
                 })
@@ -79,6 +106,7 @@
         function closeModal() {
             document.getElementById('status_modal').style.display = 'none';
         }
+        
 
 
     </script>

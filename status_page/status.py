@@ -41,7 +41,10 @@ def home():
 @app.route('/status')
 def status():
     get_status.update_status()
+    vm1_status = get_status.ping_vm_good(IP.VM1_IP)["status"]
+    vm2_status = get_status.ping_vm_good(IP.VM2_IP)["status"]
     home_status = get_status.status_data["home"]["status"]
+    
     flask_status_code = home_status["code"]
 
     data = {

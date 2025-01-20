@@ -18,14 +18,14 @@
                 <div class="{{vm1_status_circ}}">
                     {{ vm1_check_mark }}
                 </div>
-                <button id="plus_button" class="plus-button" onclick="openModal(vm1)">+</button>
+                <button id="plus_button" class="plus-button" onclick="openModal('vm1')">+</button>
             </td>
             <td class="cell">
                 <div class="component-name">VM2 Ping</div>
                 <div class="{{vm2_status_circ}}">
                     {{ vm2_check_mark }}
                 </div>
-                <button id="plus_button" class="plus-button" onclick="openModal(vm2)">+</button>
+                <button id="plus_button" class="plus-button" onclick="openModal('vm2')">+</button>
             </td>
         </tr>
         <tr>  
@@ -34,7 +34,7 @@
                 <div class="{{http_status_circ}}">
                     {{ http_check_mark }}
                 </div>
-                <button id="plus_button" class="plus-button" onclick="openModal(HTTPS)">+</button>
+                <button id="plus_button" class="plus-button" onclick="openModal('http')">+</button>
             </td>
 
             <td class ="cell">
@@ -42,7 +42,7 @@
                 <div class ="{{login_status_circ}}">
                     {{ login_status_mark }}
                 </div>
-                <button id="plus_button" class="plus-button" onclick="openModal(Login)">+</button>
+                <button id="plus_button" class="plus-button" onclick="openModal('login')">+</button>
 
         </tr>
 
@@ -52,7 +52,7 @@
                 <div class ="{{register_status_circ}}">
                     {{ register_check_mark }}
                 </div>
-                <button id="plus_button" class="plus-button" onclick="openModal(Register)">+</button>
+                <button id="plus_button" class="plus-button" onclick="openModal('register')">+</button>
             </td>
         </tr>
     </table>
@@ -63,7 +63,6 @@
             <span class="close-btn" onclick="closeModal()">&times;</span>
             <h2>Status Info</h2>
             <div id="status_text"></div> 
-            <button id="plus_button" class="plus-button" onclick="openModal()">+</button>
         </div>
     </div>
 

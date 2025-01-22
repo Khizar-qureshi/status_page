@@ -16,6 +16,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from notify import send_alert_email
 from collections import deque
+from status_param import IP
+
 
 def ping_vm_good(ip):
     response = os.system(f"ping -c 1 {ip}")
@@ -107,14 +109,24 @@ prev_failed_services = set()
 
 def update_status():
     global prev_failed_services
+    vm1_info = ping_vm_good(IP.VM1_IP)
+    vm2_info = ping_vm_good(IP.VM2_IP)
     home_status_info = check_http_status(status_data["home"]["url"])
     register_status_info = check_register_status()
     login_status_info = check_login_status()
 
-    status_data["home"]["status"] = home_status_info
-    status_data["register"]["status"] = register_status_info
-    status_data["login"]["status"] = login_status_info
-
+    status_data["home"]["status"] = home_status_info["status"]
+    status_data["home"]["message"] = home_status_info["message"]
+    status_data["home"]["code"] = home_status_info["code"]
+    status_data["register"]["status"] = register_status_info["status"]
+    status_data["register"]["message"] = register_status_info["message"]
+    status_data["login"]["status"] = login_status_info["status"]
+    status_data["login"]["message"] = login_status_info["message"]
+    status_data["vm1"]["status"] = vm1_info["status"]
+    status_data["vm1"]["message"] = vm1_info["message"]
+    status_data["vm2"]["status"] = vm1_info["status"]
+    status_data["vm2"]["message"] = vm1_info["message"]
+    
     # this checks which parts are failing
     failed_services = set()
     if not home_status_info["status"]:
@@ -149,7 +161,7 @@ def update_status():
             subject = "ALERT: Service Failures Detected"
             details = []
             for service in failed_services:
-                s = status_data[service]["status"]
+                s = status_data[service]
                 details.append(f"{service.capitalize()} page error: {s['message']}")
             body = "\n".join(details)
             send_alert_email(subject, body)
@@ -184,8 +196,6 @@ def get_status_history(days: int) -> list:
 
     return list(return_queue)
     
-
-      
 
 def signup_status():
     return

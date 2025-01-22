@@ -3,26 +3,29 @@ from flask import jsonify
 import get_status 
 from status_param import IP
 from status_param import Https
+#from status_param import Https, status_data
+
 
 app = flask.Flask(__name__, static_folder='static', template_folder='templates')
 
 @app.route('/') 
 def home():
-
+    overall_status = 'healthy_container' if get_status.update_status() else 'issue_container'
+   # get_status.update_status()
     status_history_list = get_status.get_status_history(12)
     status_history_list_length = len(status_history_list)
     status_history_percentage = round((sum(status_history_list) / status_history_list_length) * 100, 2) if status_history_list_length > 0 else 0
 
-    vm1_status_circ = 'status-circle-healthy-container' if get_status.ping_vm_good(IP.VM1_IP)['status'] else 'status-circle-issue-container'
-    vm2_status_circ = 'status-circle-healthy-container' if get_status.ping_vm_good(IP.VM2_IP)['status'] else 'status-circle-issue-container'
-    http_status_circ = 'status-circle-healthy-container' if get_status.update_status() else 'status-circle-issue-container'
-    login_status_circ = 'status-circle-healthy-container' if get_status.check_login_status()['status'] else 'status-circle-issue-container'
-    register_status_circ = 'status-circle-healthy-container' if get_status.check_register_status()['status'] else 'status-circle-issue-container'
-    overall_status = 'issue_container' if 'issue' in vm1_status_circ or 'issue' in vm2_status_circ or 'issue' in http_status_circ or 'issue' in login_status_circ or 'issue' in register_status_circ else 'healthy_container'
+    vm1_status_circ = 'status-circle-healthy-container' if get_status.status_data["vm1"]['status'] else 'status-circle-issue-container'
+    vm2_status_circ = 'status-circle-healthy-container' if get_status.status_data["vm2"]['status'] else 'status-circle-issue-container'
+    http_status_circ = 'status-circle-healthy-container' if get_status.status_data["home"]["status"] else 'status-circle-issue-container'
+    login_status_circ = 'status-circle-healthy-container' if get_status.status_data["login"]['status'] else 'status-circle-issue-container'
+    register_status_circ = 'status-circle-healthy-container' if get_status.status_data["register"]['status'] else 'status-circle-issue-container'
+   # overall_status = 'issue_container' if 'issue' in vm1_status_circ or 'issue' in vm2_status_circ or 'issue' in http_status_circ or 'issue' in login_status_circ or 'issue' in register_status_circ else 'healthy_container'
 
-    vm1_check_mark = "✓" if get_status.ping_vm_good(IP.VM1_IP) else "✘"
-    vm2_check_mark = "✓" if get_status.ping_vm_good(IP.VM2_IP) else "✘"
-    http_check_mark = "✓" if get_status.update_status() else "✘"
+    vm1_check_mark = "✓" if "healthy" in vm1_status_circ else "✘"
+    vm2_check_mark = "✓" if "healthy" in vm2_status_circ else "✘"
+    http_check_mark = "✓" if "healthy" in http_status_circ else "✘"
     login_check_mark = "✓" if 'healthy' in login_status_circ else "✘"
     register_check_mark = "✓" if 'healthy' in register_status_circ else "✘"
     
@@ -48,15 +51,25 @@ def home():
 
 @app.route('/status')
 def status():
-    get_status.update_status()
-    vm1_status = get_status.ping_vm_good(IP.VM1_IP)["status"]
-    vm2_status = get_status.ping_vm_good(IP.VM2_IP)["status"]
-    home_status = get_status.status_data["home"]["status"]
+    #get_status.update_status()
+    #vm1_status = get_status.ping_vm_good(IP.VM1_IP)["status"]
+    #vm2_status = get_status.ping_vm_good(IP.VM2_IP)["status"]
+    #home_status = get_status.status_data["home"]["status"]
     
-    flask_status_code = home_status["code"]
+    vm1_message = get_status.status_data["vm1"]["message"]
+    vm2_message = get_status.status_data["vm1"]["message"]
+    login_message = get_status.status_data["login"]["message"]
+    register_message = get_status.status_data["register"]["message"]
+    home_message = get_status.status_data["home"]["message"]
+    
+    flask_status_code = get_status.status_data["home"]["code"]
 
     data = {
-        "http_status_message": home_status["message"]
+        "http_message": home_message,
+        "vm1_message": vm1_message,
+        "vm2_message": vm2_message,
+        "login_message": login_message,
+        "register_message": register_message
     }
 
     return jsonify(data), flask_status_code

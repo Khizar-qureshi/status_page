@@ -13,7 +13,10 @@ class IP:
     VM2_IP = '65.52.239.81'
 
 status_data = {
-    "home": {"status": None, "url": Https.url_home},
+    "home": {"status": None, "url": Https.url_home, "message": '', 'code': None},
     "register": {"status": None, "url": Https.url_register},
-    "login": {"status": None, "url": Https.url_login}
+    "login": {"status": None, "url": Https.url_login, "message": ''},
+    "vm1": {"status": None, "url": Https.url_login, "message": ''},
+    "vm2": {"status": None, "message": ''}
+    
 }

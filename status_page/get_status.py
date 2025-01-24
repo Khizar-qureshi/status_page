@@ -31,7 +31,7 @@ def ping_vm_good(ip):
                 }
 
 def check_vm1_systemd():
-    systemd_running = os.system("ssh azureuser@onemovechess-api.eastus2.cloudapp.azure.com pgrep -l systemd || true")
+    systemd_running = os.system("ssh -i ~/.ssh/VM-Key.pem azureuser@onemovechess-api.eastus2.cloudapp.azure.com pgrep -l systemd || true")
     if systemd_running == 0:
         return {"status": True,
                 "message": "VM1 System Domain Up."
@@ -43,7 +43,7 @@ def check_vm1_systemd():
     
     
 def check_vm2_systemd():
-    systemd_running = os.system("ssh azureuser@onemovechess-web.northcentralus.cloudapp.azure.com pgrep -l systemd || true")
+    systemd_running = os.system("ssh -i ~/.ssh/VM-Key.pem azureuser@onemovechess-web.northcentralus.cloudapp.azure.com pgrep -l systemd || true")
     if systemd_running == 0:
         return {"status": True,
                 "message": "VM2 System Domain Up."
@@ -54,14 +54,14 @@ def check_vm2_systemd():
                 }
 
 def check_vm1_dotnet_running():
-    dotnet_running = os.system("ssh azureuser@onemovechess-api.eastus2.cloudapp.azure.com pgrep -l dotnet || true")
+    dotnet_running = os.system("ssh -i ~/.ssh/VM-Key.pem azureuser@onemovechess-api.eastus2.cloudapp.azure.com pgrep -l dotnet || true")
     if dotnet_running == 0:
         return {"status": True, 'message': "VM1 Dotnet running."}
     else:
         return {"status": False, 'message': "ERROR: VM1 Dotnet is not running. "}
 
 def check_vm2_dotnet_running():
-    dotnet_running = os.system("ssh azureuser@onemovechess-web.northcentralus.cloudapp.azure.com pgrep -l dotnet || true")
+    dotnet_running = os.system("ssh -i ~/.ssh/VM-Key.pem azureuser@onemovechess-web.northcentralus.cloudapp.azure.com pgrep -l dotnet || true")
     if dotnet_running == 0:
         return {"status": True, 'message': "VM2 Dotnet running."}
     else:

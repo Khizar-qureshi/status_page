@@ -19,7 +19,7 @@ def setup_driver():
     """
     options = webdriver.ChromeOptions()
     options.add_argument("--disable-blink-features=AutomationControlled")  # Avoid bot detection
-    options.add_argument("--disable-gpu")  # Disable GPU acceleration
+    options.add_argument("--disable-gpu")
     options.add_argument("--disable-background-timer-throttling")  # Keep browser active
     options.add_argument("--disable-backgrounding-occluded-windows")
     options.add_argument("--disable-renderer-backgrounding")
@@ -137,16 +137,18 @@ def check_board_status():
                 try:
                     make_random_move(driver)
                     board_message = "Successfully Moved Chess Pieces"
+                    # print("starting in 30 seconds")
+                    # time.sleep(30)
                     return get_chessboard_status(True, True, board_message)
                 except:
+                    print("starting in 30 seconds")
+                    time.sleep(30)
                     board_message = "Loaded board but Failed to Move Chess Pieces"
-                    return get_chessboard_status(True, False, board_message)
-                print("starting in 30 seconds")
-                time.sleep(30)
+                    # return get_chessboard_status(True, False, board_message)
         except:
             board_message = "Board Allocation Failed"
             print(board_message)
-            return get_chessboard_status(False, False, board_message)
+            # return get_chessboard_status(False, False, board_message)
         pdb.set_trace()
     finally:
         driver.quit()

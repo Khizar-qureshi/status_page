@@ -4,7 +4,7 @@ import random
 @dataclass
 class Login:
     username = "testbot2"
-    password = "O-u+dw7e2O960Yjq=ZJ$-^4e"
+    password = "nL12^Cj3P=rcMq1Sw4Dq%!p2"
     cookies_file_path = "automation/utils/cookies.json"
     link = "http://onemovechess-web.northcentralus.cloudapp.azure.com/Login"
 

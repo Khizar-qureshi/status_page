@@ -43,6 +43,44 @@
                 <button id="plus_button" class="plus-button" onclick="openModal('vm2')">+</button>
             </td>
         </tr>
+
+        <tr> 
+            <td class = "cell"> 
+                <div class = "component-name">VM1 System Domain </div>
+                <div class = "{{vm1_sd_circ}}">
+                    {{vm1_sd_check_mark}}
+                <div>
+                <button id="plus_button" class="plus-button" onclick="openModal('vm1_sd')">+</button>
+            </td>
+
+            <td class = "cell"> 
+                <div class = "component-name">VM2 System Domain </div>
+                <div class = "{{vm2_sd_circ}}">
+                    {{vm2_sd_check_mark}}
+                <div>
+                <button id="plus_button" class="plus-button" onclick="openModal('vm2_sd')">+</button>
+            </td>
+        </tr>
+
+        
+        <tr> 
+            <td class = "cell"> 
+                <div class = "component-name">VM1 Dotnet</div>
+                <div class = "{{vm1_dn_circ}}">
+                    {{vm1_dn_check_mark}}
+                <div>
+                <button id="plus_button" class="plus-button" onclick="openModal('vm1_dn')">+</button>
+            </td>
+
+            <td class = "cell"> 
+                <div class = "component-name">VM2 Dotnet </div>
+                <div class = "{{vm2_dn_circ}}">
+                    {{vm2_dn_check_mark}}
+                <div>
+                <button id="plus_button" class="plus-button" onclick="openModal('vm2_dn')">+</button>
+            </td>
+        </tr>
+    
         <tr>  
             <td class="cell">
                 <div class="component-name">HTTPS Web UI</div>
@@ -104,6 +142,14 @@
                         case 'register':
                             message = data.register_message;
                             break;
+                        case 'vm1_sd':
+                            message = data.vm1_sd_message;
+                        case 'vm2_sd':
+                            message = data.vm2_sd_message;
+                        case 'vm1_dn':
+                            message = data.vm1_dn_message;
+                        case 'vm2_dn':
+                            message = data.vm1_dn_message;
                         default:
                            message = 'No status for component.';
                     }

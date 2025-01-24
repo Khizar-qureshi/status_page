@@ -33,30 +33,39 @@ def ping_vm_good(ip):
 def check_vm1_systemd():
     systemd_running = os.system("ssh azureuser@onemovechess-api.eastus2.cloudapp.azure.com pgrep -l systemd || true")
     if systemd_running == 0:
-        return True
+        return {"status": True,
+                "message": "VM1 System Domain Up."
+            }
     else:
-        return False
+        return {"status": False,
+                "message": "ERROR: VM1 System Domain Down."
+                }
+    
     
 def check_vm2_systemd():
     systemd_running = os.system("ssh azureuser@onemovechess-web.northcentralus.cloudapp.azure.com pgrep -l systemd || true")
     if systemd_running == 0:
-        return True
+        return {"status": True,
+                "message": "VM2 System Domain Up."
+                }
     else:
-        return False
+        return {"status": True, 
+                "message": "ERROR: VM2 System Domain Down."
+                }
 
 def check_vm1_dotnet_running():
     dotnet_running = os.system("ssh azureuser@onemovechess-api.eastus2.cloudapp.azure.com pgrep -l dotnet || true")
     if dotnet_running == 0:
-        return True
+        return {"status": True, 'message': "VM1 Dotnet running."}
     else:
-        return False
+        return {"status": False, 'message': "ERROR: VM1 Dotnet is not running. "}
 
 def check_vm2_dotnet_running():
     dotnet_running = os.system("ssh azureuser@onemovechess-web.northcentralus.cloudapp.azure.com pgrep -l dotnet || true")
     if dotnet_running == 0:
-        return True
+        return {"status": True, 'message': "VM2 Dotnet running."}
     else:
-        return False
+        return {"status": True, 'message': "ERROR: VM2 Dotnet is not running."}
 
 def check_http_status(url: str):
     try:
@@ -114,6 +123,11 @@ def update_status():
     home_status_info = check_http_status(status_data["home"]["url"])
     register_status_info = check_register_status()
     login_status_info = check_login_status()
+    vm1_sd_info = check_vm1_systemd()
+    vm2_sd_info = check_vm2_systemd()
+    vm1_dotnet_info = check_vm1_dotnet_running()
+    vm2_dotnet_info = check_vm2_dotnet_running()
+
 
     status_data["home"]["status"] = home_status_info["status"]
     status_data["home"]["message"] = home_status_info["message"]
@@ -126,6 +140,17 @@ def update_status():
     status_data["vm1"]["message"] = vm1_info["message"]
     status_data["vm2"]["status"] = vm1_info["status"]
     status_data["vm2"]["message"] = vm1_info["message"]
+    status_data["vm1_systemd"]["status"] = vm1_sd_info["status"]
+    status_data["vm1_systemd"]["message"] = vm1_sd_info["message"]
+    status_data["vm2_systemd"]["status"] = vm2_sd_info["status"]
+    status_data["vm2_systemd"]["message"] = vm2_sd_info["message"]
+    status_data["vm1_dotnet"]["status"] = vm1_dotnet_info["status"]
+    status_data["vm1_dotnet"]["message"] = vm1_dotnet_info["message"]
+    status_data["vm2_dotnet"]["status"] = vm2_dotnet_info["status"]
+    status_data["vm2_dotnet"]["message"] = vm2_dotnet_info["message"]
+
+
+    
     
     # this checks which parts are failing
     failed_services = set()

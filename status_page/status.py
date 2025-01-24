@@ -21,13 +21,24 @@ def home():
     http_status_circ = 'status-circle-healthy-container' if get_status.status_data["home"]["status"] else 'status-circle-issue-container'
     login_status_circ = 'status-circle-healthy-container' if get_status.status_data["login"]['status'] else 'status-circle-issue-container'
     register_status_circ = 'status-circle-healthy-container' if get_status.status_data["register"]['status'] else 'status-circle-issue-container'
-   # overall_status = 'issue_container' if 'issue' in vm1_status_circ or 'issue' in vm2_status_circ or 'issue' in http_status_circ or 'issue' in login_status_circ or 'issue' in register_status_circ else 'healthy_container'
+    vm1_sd_circ = 'status-circle-healthy-container' if get_status.status_data["vm1_systemd"]["status"] else 'status-cricle-issue-container'
+    vm2_sd_circ = 'status-circle-healthy-container' if get_status.status_data["vm2_systemd"]["status"] else 'status-cricle-issue-container'
+    vm1_dn_circ = 'status-circle-healthy-container' if get_status.status_data["vm1_dotnet"]["status"] else 'status-cricle-issue-container'
+    vm2_dn_circ = 'status-circle-healthy-container' if get_status.status_data["vm2_dotnet"]["status"] else 'status-cricle-issue-container'
+
 
     vm1_check_mark = "✓" if "healthy" in vm1_status_circ else "✘"
     vm2_check_mark = "✓" if "healthy" in vm2_status_circ else "✘"
     http_check_mark = "✓" if "healthy" in http_status_circ else "✘"
     login_check_mark = "✓" if 'healthy' in login_status_circ else "✘"
     register_check_mark = "✓" if 'healthy' in register_status_circ else "✘"
+    vm1_sd_check_mark =  "✓" if 'healthy' in vm1_sd_circ else "✘"
+    vm2_sd_check_mark =  "✓" if 'healthy' in vm2_sd_circ else "✘"
+    vm1_dn_check_mark =  "✓" if 'healthy' in vm1_dn_circ else "✘"
+    vm2_dn_check_mark =  "✓" if 'healthy' in vm2_dn_circ else "✘"
+
+
+
     
 
     html_dict = {
@@ -45,6 +56,14 @@ def home():
         'status_history_list': status_history_list,
         'status_history_list_length': status_history_list_length,
         'status_history_percentage': status_history_percentage,
+        'vm1_sd_circ': vm1_sd_circ,
+        'vm2_sd_circ': vm2_sd_circ,
+        'vm1_dn_circ': vm1_dn_circ,
+        'vm2_dn_circ': vm2_dn_circ,
+        'vm1_sd_check_mark': vm1_sd_check_mark,
+        'vm2_sd_check_mark': vm2_sd_check_mark,
+        'vm1_dn_check_mark': vm1_dn_check_mark,
+        'vm2_dn_check_mark': vm2_dn_check_mark
     }
 
     return flask.render_template('index.html', **html_dict)
@@ -62,6 +81,14 @@ def status():
     register_message = get_status.status_data["register"]["message"]
     home_message = get_status.status_data["home"]["message"]
     
+    vm1_sd_message = get_status.status_data["vm1_systemd"]["message"]
+    vm2_sd_message = get_status.status_data["vm2_systemd"]["message"]
+    vm1_dn_message = get_status.status_data["vm1_dotnet"]["message"]
+    vm2_dn_message = get_status.status_data["vm2_dotnet"]["message"]
+
+
+
+    
     flask_status_code = get_status.status_data["home"]["code"]
 
     data = {
@@ -69,7 +96,11 @@ def status():
         "vm1_message": vm1_message,
         "vm2_message": vm2_message,
         "login_message": login_message,
-        "register_message": register_message
+        "register_message": register_message,
+        "vm1_sd_message": vm1_sd_message,
+        "vm2_sd_message": vm2_sd_message,
+        "vm1_dn_message": vm1_dn_message,
+        "vm2_dn_message": vm2_dn_message
     }
 
     return jsonify(data), flask_status_code

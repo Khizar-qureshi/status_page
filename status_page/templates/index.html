@@ -5,10 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>One-Move Chess Status Page</title>
     <link rel="stylesheet" type="text/css" href="../static/style.css" />
-    <meta http-equiv="refresh" content="75">
+    <meta http-equiv="refresh" content="120">
 </head>
 <body>
     <h1 class = title>One Move Chess Status</h1>
+
+    <div class="uptime_container">
+        <div class = "uptime_box">
+            {% for status in status_history_list %}
+            <div class="uptime_day {{ 'true' if status else 'false' }}">
+                <span class="uptime_tooltip">Testing Tooltip: Info about that day</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="uptime_legend">
+            <p>{{status_history_percentage}}% uptime in the past {{status_history_list_length}} days</p>
+        </div>
+    </div>
+
 
     <div id = "overall_status" class = {{overall_status}}> Overall Current Status </div>
     <table id="component-table">
@@ -18,21 +33,61 @@
                 <div class="{{vm1_status_circ}}">
                     {{ vm1_check_mark }}
                 </div>
+                <button id="plus_button" class="plus-button" onclick="openModal('vm1')">+</button>
             </td>
             <td class="cell">
                 <div class="component-name">VM2 Ping</div>
                 <div class="{{vm2_status_circ}}">
                     {{ vm2_check_mark }}
                 </div>
+                <button id="plus_button" class="plus-button" onclick="openModal('vm2')">+</button>
             </td>
         </tr>
+
+        <tr> 
+            <td class = "cell"> 
+                <div class = "component-name">VM1 System Domain </div>
+                <div class = "{{vm1_sd_circ}}">
+                    {{vm1_sd_check_mark}}
+                <div>
+                <button id="plus_button" class="plus-button" onclick="openModal('vm1_sd')">+</button>
+            </td>
+
+            <td class = "cell"> 
+                <div class = "component-name">VM2 System Domain </div>
+                <div class = "{{vm2_sd_circ}}">
+                    {{vm2_sd_check_mark}}
+                <div>
+                <button id="plus_button" class="plus-button" onclick="openModal('vm2_sd')">+</button>
+            </td>
+        </tr>
+
+        
+        <tr> 
+            <td class = "cell"> 
+                <div class = "component-name">VM1 Dotnet</div>
+                <div class = "{{vm1_dn_circ}}">
+                    {{vm1_dn_check_mark}}
+                <div>
+                <button id="plus_button" class="plus-button" onclick="openModal('vm1_dn')">+</button>
+            </td>
+
+            <td class = "cell"> 
+                <div class = "component-name">VM2 Dotnet </div>
+                <div class = "{{vm2_dn_circ}}">
+                    {{vm2_dn_check_mark}}
+                <div>
+                <button id="plus_button" class="plus-button" onclick="openModal('vm2_dn')">+</button>
+            </td>
+        </tr>
+    
         <tr>  
             <td class="cell">
                 <div class="component-name">HTTPS Web UI</div>
                 <div class="{{http_status_circ}}">
                     {{ http_check_mark }}
                 </div>
-                <button id="plus_button" class="plus-button" onclick="openModal()">+</button>
+                <button id="plus_button" class="plus-button" onclick="openModal('http')">+</button>
             </td>
 
             <td class ="cell">
@@ -40,6 +95,8 @@
                 <div class ="{{login_status_circ}}">
                     {{ login_status_mark }}
                 </div>
+                <button id="plus_button" class="plus-button" onclick="openModal('login')">+</button>
+
         </tr>
 
         <tr>
@@ -48,6 +105,7 @@
                 <div class ="{{register_status_circ}}">
                     {{ register_check_mark }}
                 </div>
+                <button id="plus_button" class="plus-button" onclick="openModal('register')">+</button>
             </td>
         </tr>
     </table>
@@ -56,17 +114,46 @@
     <div id="status_modal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2>HTTP Status Info</h2>
+            <h2>Status Info</h2>
             <div id="status_text"></div> 
         </div>
     </div>
 
     <script>
-        function openModal() {
+
+        function openModal(component) {
             fetch('/status')
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('status_text').innerText = data.http_status_message;
+                    let message = '';
+                    switch (component) {
+                        case 'vm1':
+                            message = data.vm1_message;
+                            break;
+                        case 'vm2':
+                            message = data.vm2_message;
+                            break;
+                        case 'http':
+                            message = data.http_message;
+                            break;
+                        case 'login':
+                            message = data.login_message;
+                            break;
+                        case 'register':
+                            message = data.register_message;
+                            break;
+                        case 'vm1_sd':
+                            message = data.vm1_sd_message;
+                        case 'vm2_sd':
+                            message = data.vm2_sd_message;
+                        case 'vm1_dn':
+                            message = data.vm1_dn_message;
+                        case 'vm2_dn':
+                            message = data.vm1_dn_message;
+                        default:
+                           message = 'No status for component.';
+                    }
+                    document.getElementById('status_text').innerText = message;
                     document.getElementById('status_modal').style.display = 'flex';
                 })
                 .catch(error => {
@@ -79,6 +166,7 @@
         function closeModal() {
             document.getElementById('status_modal').style.display = 'none';
         }
+        
 
 
     </script>

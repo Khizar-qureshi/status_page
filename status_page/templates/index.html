@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>One-Move Chess Status Page</title>
     <link rel="stylesheet" type="text/css" href="../static/style.css" />
-    <meta http-equiv="refresh" content="75">
+    <meta http-equiv="refresh" content="120">
 </head>
 <body>
     <h1 class = title>One Move Chess Status</h1>
@@ -43,6 +43,44 @@
                 <button id="plus_button" class="plus-button" onclick="openModal('vm2')">+</button>
             </td>
         </tr>
+
+        <tr> 
+            <td class = "cell"> 
+                <div class = "component-name">VM1 System Domain </div>
+                <div class = "{{vm1_sd_circ}}">
+                    {{vm1_sd_check_mark}}
+                <div>
+                <button id="plus_button" class="plus-button" onclick="openModal('vm1_sd')">+</button>
+            </td>
+
+            <td class = "cell"> 
+                <div class = "component-name">VM2 System Domain </div>
+                <div class = "{{vm2_sd_circ}}">
+                    {{vm2_sd_check_mark}}
+                <div>
+                <button id="plus_button" class="plus-button" onclick="openModal('vm2_sd')">+</button>
+            </td>
+        </tr>
+
+        
+        <tr> 
+            <td class = "cell"> 
+                <div class = "component-name">VM1 Dotnet</div>
+                <div class = "{{vm1_dn_circ}}">
+                    {{vm1_dn_check_mark}}
+                <div>
+                <button id="plus_button" class="plus-button" onclick="openModal('vm1_dn')">+</button>
+            </td>
+
+            <td class = "cell"> 
+                <div class = "component-name">VM2 Dotnet </div>
+                <div class = "{{vm2_dn_circ}}">
+                    {{vm2_dn_check_mark}}
+                <div>
+                <button id="plus_button" class="plus-button" onclick="openModal('vm2_dn')">+</button>
+            </td>
+        </tr>
+    
         <tr>  
             <td class="cell">
                 <div class="component-name">HTTPS Web UI</div>
@@ -90,24 +128,32 @@
                     let message = '';
                     switch (component) {
                         case 'vm1':
-                            //message = data.vm1_status_message;
+                            message = data.vm1_message;
                             break;
                         case 'vm2':
-                            //message = data.vm2_status_message;
+                            message = data.vm2_message;
                             break;
                         case 'http':
-                            //message = data.http_status_message;
+                            message = data.http_message;
                             break;
                         case 'login':
-                            //message = data.login_status_message;
+                            message = data.login_message;
                             break;
                         case 'register':
-                            //message = data.register_status_message;
+                            message = data.register_message;
                             break;
+                        case 'vm1_sd':
+                            message = data.vm1_sd_message;
+                        case 'vm2_sd':
+                            message = data.vm2_sd_message;
+                        case 'vm1_dn':
+                            message = data.vm1_dn_message;
+                        case 'vm2_dn':
+                            message = data.vm1_dn_message;
                         default:
-                           // message = 'No status for component.';
+                           message = 'No status for component.';
                     }
-                    document.getElementById('status_text').innerText = data.http_status_message;
+                    document.getElementById('status_text').innerText = message;
                     document.getElementById('status_modal').style.display = 'flex';
                 })
                 .catch(error => {

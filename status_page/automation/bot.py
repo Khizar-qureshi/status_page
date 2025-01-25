@@ -174,6 +174,7 @@ def check_board_status(driver):
         try:
             make_random_move(driver)
             board_message = "Successfully Moved Chess Pieces and allocated new board"
+            Time.sleep()
             return get_chessboard_status(True, True, board_message)
         except:
             board_message = "Loaded board but Failed to Move Chess Pieces"

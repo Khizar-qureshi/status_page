@@ -17,6 +17,7 @@ from selenium.webdriver.common.keys import Keys
 from notify import send_alert_email
 from collections import deque
 from status_param import IP
+from automation.bot import bot_procedure
 
 
 def ping_vm_good(ip):
@@ -121,8 +122,9 @@ def update_status():
     vm1_info = ping_vm_good(IP.VM1_IP)
     vm2_info = ping_vm_good(IP.VM2_IP)
     home_status_info = check_http_status(status_data["home"]["url"])
-    register_status_info = check_register_status()
-    login_status_info = check_login_status()
+    register_status_info, login_status_info, board_status_info = bot_procedure()
+    # register_status_info = check_register_status()
+    # login_status_info = check_login_status()
     vm1_sd_info = check_vm1_systemd()
     vm2_sd_info = check_vm2_systemd()
     vm1_dotnet_info = check_vm1_dotnet_running()
@@ -134,6 +136,9 @@ def update_status():
     status_data["home"]["code"] = home_status_info["code"]
     status_data["register"]["status"] = register_status_info["status"]
     status_data["register"]["message"] = register_status_info["message"]
+    status_data["board"]["board_status"] = board_status_info["board_status"]
+    status_data["board"]["chess_move_status"] = board_status_info["chess_move_status"]
+    status_data["board"]["message"] = board_status_info["message"]
     status_data["login"]["status"] = login_status_info["status"]
     status_data["login"]["message"] = login_status_info["message"]
     status_data["vm1"]["status"] = vm1_info["status"]

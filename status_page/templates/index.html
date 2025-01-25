@@ -107,6 +107,14 @@
                 </div>
                 <button id="plus_button" class="plus-button" onclick="openModal('register')">+</button>
             </td>
+
+            <td class="cell">
+                <div class="component-name">Chess Board</div>
+                <div class ="{{board_status_circ}}">
+                    {{ board_check_mark }}
+                </div>
+                <button id="plus_button" class="plus-button" onclick="openModal('board')">+</button>
+            </td>
         </tr>
     </table>
     
@@ -141,6 +149,9 @@
                             break;
                         case 'register':
                             message = data.register_message;
+                            break;
+                        case 'board':
+                            message = data.board_message;
                             break;
                         case 'vm1_sd':
                             message = data.vm1_sd_message;

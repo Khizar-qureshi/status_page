@@ -14,7 +14,8 @@ class IP:
 
 status_data = {
     "home": {"status": None, "url": Https.url_home, "message": '', 'code': None},
-    "register": {"status": None, "url": Https.url_register},
+    "register": {"status": None, "url": Https.url_register, "message": ''},
+    "board": {"board_status": None, "chess_move_status": None, "url": Https.url_register, "message": ''},
     "login": {"status": None, "url": Https.url_login, "message": ''},
     "vm1": {"status": None, "url": Https.url_login, "message": ''},
     "vm2": {"status": None, "message": ''},

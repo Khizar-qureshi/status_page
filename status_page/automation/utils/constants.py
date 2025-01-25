@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import random
+import time
 
 @dataclass
 class Login:
@@ -8,6 +9,12 @@ class Login:
     cookies_file_path = "automation/utils/cookies.json"
     link = "http://onemovechess-web.northcentralus.cloudapp.azure.com/Login"
 
+@dataclass
+class Register:
+    username = 'BOT_TEST_REGISTER'
+    sign_up_code = 'Carleton comps 2024-2025!'
+    link = "http://onemovechess-web.northcentralus.cloudapp.azure.com/Register"
+
 class Time:
     def sleep():
-        return random.uniform(2, 4)
+        return time.sleep(random.uniform(2, 4))

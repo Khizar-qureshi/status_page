@@ -12,7 +12,7 @@ app = flask.Flask(__name__, static_folder='static', template_folder='templates')
 def home():
     overall_status = 'healthy_container' if get_status.update_status() else 'issue_container'
    # get_status.update_status()
-    status_history_list = get_status.get_status_history(12)
+    status_history_list = get_status.get_status_history(20)
     status_history_list_length = len(status_history_list)
     status_history_percentage = round((sum(status_history_list) / status_history_list_length) * 100, 2) if status_history_list_length > 0 else 0
     vm1_status_circ = 'status-circle-healthy-container' if get_status.status_data["vm1"]['status'] else 'status-circle-issue-container'
@@ -111,4 +111,4 @@ def status():
     return jsonify(data), flask_status_code
 
 if __name__ == '__main__':
-    app.run(debug = True)
+    app.run(host="0.0.0.0", debug = True)

@@ -28,7 +28,7 @@ def setup_driver():
     options.add_argument('--ignore-ssl-errors=yes')
     options.add_argument('--allow-insecure-localhost')
     options.add_argument('--unsafely-treat-insecure-origin-as-secure=http://onemovechess-web.northcentralus.cloudapp.azure.com/')
-    # options.add_argument("--headless")
+    options.add_argument("--headless")
     
     driver = webdriver.Chrome(options=options)
     return driver

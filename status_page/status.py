@@ -3,6 +3,7 @@ from flask import jsonify
 import get_status 
 from status_param import IP
 from status_param import Https
+from datetime import datetime
 #from status_param import Https, status_data
 
 
@@ -10,6 +11,7 @@ app = flask.Flask(__name__, static_folder='static', template_folder='templates')
 
 @app.route('/') 
 def home():
+    timestamp = datetime.now()
     overall_status = 'healthy_container' if get_status.update_status() else 'issue_container'
    # get_status.update_status()
     status_history_list = get_status.get_status_history(20)
@@ -66,7 +68,8 @@ def home():
         'vm1_sd_check_mark': vm1_sd_check_mark,
         'vm2_sd_check_mark': vm2_sd_check_mark,
         'vm1_dn_check_mark': vm1_dn_check_mark,
-        'vm2_dn_check_mark': vm2_dn_check_mark
+        'vm2_dn_check_mark': vm2_dn_check_mark,
+        'timestamp': timestamp
     }
 
     return flask.render_template('index.html', **html_dict)
@@ -111,5 +114,5 @@ def status():
     return jsonify(data), flask_status_code
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug = True)
-    # app.run(debug = True)
+    # app.run(host="0.0.0.0", debug = True)
+     app.run(debug = True)

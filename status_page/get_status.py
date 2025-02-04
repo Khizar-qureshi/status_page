@@ -21,8 +21,6 @@ from status_param import IP
 from automation.bot import bot_procedure
 import subprocess
 
-
-
 def ping_vm_good(ip):
     response = os.system(f"ping -c 1 {ip}")
     if response == 0:
@@ -197,6 +195,14 @@ def update_status():
         failed_services.add("register")
     if not login_status_info["status"]:
         failed_services.add("login")
+    if not vm1_dotnet_info["status"]:
+        failed_services.add("vm1 dotnet")
+    if not vm2_dotnet_info["status"]:
+        failed_services.add("vm2 dotnet")
+    if not vm1_sd_info["status"]:
+        failed_services.add("vm1 system domain")
+    if not vm2_sd_info["status"]:
+        failed_services.add("vm2 system domain")
 
     # Update status history (status_history.csv)
     # Updates the history CSV to reflect a failure on the status page history 
@@ -257,12 +263,3 @@ def get_status_history(days: int) -> list:
             return_queue.appendleft(status)
 
     return list(return_queue)
-    
-
-def signup_status():
-    return
-
-
-def valid_bot_password():
-    return Https.BOT["botname"] != None
-

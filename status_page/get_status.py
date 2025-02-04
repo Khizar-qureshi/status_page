@@ -19,6 +19,8 @@ from notify import send_alert_email
 from collections import deque
 from status_param import IP
 from automation.bot import bot_procedure
+import subprocess
+
 
 
 def ping_vm_good(ip):
@@ -33,41 +35,53 @@ def ping_vm_good(ip):
                 }
 
 def check_vm1_systemd():
-    systemd_running = os.system("ssh -i ~/.ssh/VM-Key.pem azureuser@onemovechess-api.eastus2.cloudapp.azure.com pgrep -l systemd || true")
-    if systemd_running == 0:
-        return {"status": True,
-                "message": "VM1 System Domain Up."
-            }
-    else:
-        return {"status": False,
-                "message": "ERROR: VM1 System Domain Down."
-                }
-    
-    
+    try:
+        command = "ssh -i ~/.ssh/VM-Key.pem azureuser@onemovechess-api.eastus2.cloudapp.azure.com pgrep -l systemd || true"
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        if result.returncode == 0 and "systemd" in result.stdout:
+            return {"status": True, "message": f'VM1 System Domain Up & Running.'}
+        else:
+            return {"status": False, "message": f'ERROR: VM1 System Domain Down. Outputted: {result.stdout.strip()}'}
+    except Exception as e:
+        return {"status": False, "message": f'ERRRO: VM1 System Domaind Down. Ouputted: {str(e)}'}
+        
 def check_vm2_systemd():
-    systemd_running = os.system("ssh -i ~/.ssh/VM-Key.pem azureuser@onemovechess-web.northcentralus.cloudapp.azure.com pgrep -l systemd || true")
-    if systemd_running == 0:
-        return {"status": True,
-                "message": "VM2 System Domain Up."
-                }
-    else:
-        return {"status": True, 
-                "message": "ERROR: VM2 System Domain Down."
-                }
+    try:
+        command = "ssh -i ~/.ssh/VM-Key.pem azureuser@onemovechess-web.northcentralus.cloudapp.azure.com pgrep -l systemd || true"
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        if result.returncode == 0 and "systemd" in result.stdout:
+            return {"status": True, "message": f'VM2 System Domain Up & Running.'}
+        else:
+            return {"status": False, "message": f'ERROR: VM2 System Domain Down. Outputted: {result.stdout.strip()}'}
+    except Exception as e:
+        return {"status": False, "message": f'ERRRO: VM2 System Domaind Down. Ouputted: {str(e)}'}
+        
 
 def check_vm1_dotnet_running():
-    dotnet_running = os.system("ssh -i ~/.ssh/VM-Key.pem azureuser@onemovechess-api.eastus2.cloudapp.azure.com pgrep -l dotnet || true")
-    if dotnet_running == 0:
-        return {"status": True, 'message': "VM1 Dotnet running."}
-    else:
-        return {"status": False, 'message': "ERROR: VM1 Dotnet is not running. "}
+    try:
+        command = "ssh -i ~/.ssh/VM-Key.pem azureuser@onemovechess-api.eastus2.cloudapp.azure.com pgrep -l dotnet"
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        if result.returncode == 0 and "dotnet" in result.stdout:
+            return {"status": True, "message": "VM1 Dotnet is running."}
+        elif "Permission denied" in result.stderr or "Could not resolve hostname" in result.stderr:
+            return {"status": False, "message": f"SSH ERROR: {result.stderr.strip()}"}
+        else:
+            return {"status": False, "message": "ERROR: VM1 Dotnet is not running."}
+    except Exception as e:
+        return {"status": False, "message": f"ERROR: {str(e)}"}
 
 def check_vm2_dotnet_running():
-    dotnet_running = os.system("ssh -i ~/.ssh/VM-Key.pem azureuser@onemovechess-web.northcentralus.cloudapp.azure.com pgrep -l dotnet || true")
-    if dotnet_running == 0:
-        return {"status": True, 'message': "VM2 Dotnet running."}
-    else:
-        return {"status": True, 'message': "ERROR: VM2 Dotnet is not running."}
+    try:
+        command = "ssh -i ~/.ssh/VM-Key.pem azureuser@onemovechess-web.northcentralus.cloudapp.azure.com pgrep -l dotnet || true"
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        if result.returncode == 0 and "dotnet" in result.stdout:
+            return {"status": True, "message": "VM2 Dotnet is running."}
+        elif "Permission denied" in result.stderr or "Could not resolve hostname" in result.stderr:
+            return {"status": False, "message": f"SSH ERROR: {result.stderr.strip()}"}
+        else:
+            return {"status": False, "message": "ERROR: VM2 Dotnet is not running."}
+    except Exception as e:
+       return {"status": False, "message": f"ERROR: {str(e)}"}
 
 def check_http_status(url: str):
     try:
@@ -252,96 +266,3 @@ def signup_status():
 def valid_bot_password():
     return Https.BOT["botname"] != None
 
-
-def check_register_status():   
-    try:
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument('--ignore-certificate-errors')
-        chrome_options.add_argument('--ignore-ssl-errors=yes')
-        chrome_options.add_argument('--allow-insecure-localhost')
-        chrome_options.add_argument('--unsafely-treat-insecure-origin-as-secure=http://onemovechess-web.northcentralus.cloudapp.azure.com/')
-        driver = webdriver.Chrome(options=chrome_options)
-        driver.get(Https.url_register)
-
-        username = driver.find_element(By.ID, 'newUserName')
-        username.send_keys('BOT_TEST_REGISTER')
-        time.sleep(1)
-        signupcode = driver.find_element(By.ID, 'signUpCode')
-        signupcode.send_keys('Carleton comps 2024-2025!')
-        time.sleep(1)
-        
-        submit = driver.find_element(By.ID, 'registerUserButton')
-        submit.click()
-        time.sleep(5)
-        
-        password_block = driver.find_element(By.ID, 'passwordBlock')
-        if password_block.is_displayed():
-            generated_password = driver.find_element(By.ID, 'newPassword').get_attribute("value")
-            print("Registered account successfully, PASSWORD: ",generated_password)
-            Https.BOT["password"] = generated_password
-        else:
-            print("No password shown")
-            time.sleep(2)
-            driver.quit()
-            return {"status": False,
-                    "message": "Registration Failed. Errror: No password shown"}
-        time.sleep(2)
-        driver.quit()
-        return {"status": True,
-                "message": "Registration Successful"
-            }
-    except Exception as e:
-        print(e)
-        driver.quit()
-        return {"status": False,
-                "message": f'Register Bot Failed. Error: {e}'}
-    
-
-def check_login_status():
-    try:
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument('--ignore-certificate-errors')
-        chrome_options.add_argument('--ignore-ssl-errors=yes')
-        chrome_options.add_argument('--allow-insecure-localhost')
-        chrome_options.add_argument('--unsafely-treat-insecure-origin-as-secure=http://onemovechess-web.northcentralus.cloudapp.azure.com/')
-        driver = webdriver.Chrome(options=chrome_options)
-        driver.get(Https.url_login)
-
-        username = driver.find_element(By.ID, 'userName')
-        username.send_keys(Https.BOT["botname"])
-        time.sleep(1)
-        
-        signupcode = driver.find_element(By.ID, 'password')
-        signupcode.send_keys(Https.BOT["password"])
-        time.sleep(1)
-        submit = driver.find_element(By.ID, 'loginButton')
-        submit.click()
-        time.sleep(2)
-        login_block = driver.find_element(By.ID, 'accountLink')
-
-        if Https.BOT["botname"] in login_block.text:
-            print("Login created successfully")
-        else:
-            print("Invalid Login")
-            return {
-                "status":False,
-                "message": "Login Unsuccessful",
-                }
-        #time.sleep(10)
-        driver.quit()
-        
-        return {
-            "status": True,
-            "message": "Login Successful",
-        }
-    except Exception as e:
-        print(e)
-        return {
-            "status":False,
-            "message": f'Login Bot Unsuccessful Error: {e}',
-        }
-        
-
-# include only if you want pop up:
-#check_login_status() 
-#check_register_status()

@@ -32,8 +32,7 @@ def setup_driver():
     
     driver = webdriver.Chrome(options=options)
     return driver
-# def setup_driver():
-#     return webdriver.Chrome()
+
 
 def save_cookies(driver, filename):
     """
@@ -72,25 +71,37 @@ def login_and_store_cookies(driver):
 def login_to_game(driver):
     try:
         driver.get(Login.link)
-
         username = driver.find_element(By.ID, 'userName')
         username.send_keys(Login.username)
-
         signupcode = driver.find_element(By.ID, 'password')
         signupcode.send_keys(Login.password)
 
         submit = driver.find_element(By.ID, 'loginButton')
         submit.click()
         Time.sleep()
-
         login_block = driver.find_element(By.ID, 'accountLink')
+        db = "OPT"
+        if Login.username not in login_block.text:
+            #Opt password does not work, trying confgi password
+            print("password for opt failed... Trying config password.")
+            signupcode.clear()
+            signupcode.send_keys(Login.password2)
+            submit.click()
+            db = "config"
+            Time.sleep()
+            print("Finished logging in with config password.")
+        # grab log in block again 
+        login_block = driver.find_element(By.ID, 'accountLink')
+        
         if Login.username in login_block.text:
-            return login_status(True, "Login created successfully")
+            print("entered here!")
+            return login_status(True, f"Login created successfully. Current database : {db}.")
         else:
             message = driver.find_element(By.XPATH, "/html/body/div/main/form/div[1]/div[3]").text
-            return login_status(False, f"Login failed returning {message}")
-    except:
-        return login_status(False, 'Login broke causing login to fail')
+            return login_status(False, f"Login failed for both OPT and Config. Error code: {message}")
+    except Exception as e:
+        print(f"Login FAILED Error: {e}", )
+        return login_status(False, f'Login bot failed. Database is unkown. Error: {e}')
         
 
 def find_first_move(driver):
@@ -142,7 +153,7 @@ def bot_register(driver):
         password_block = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'passwordBlock')))
         if password_block.is_displayed():
             generated_password = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'newPassword')))
-            print("Registered account successfully, PASSWORD: ",generated_password)
+            print(f"Registered account successfully, PASSWORD: {generated_password}")
             return register_status(True, "Registration successful.")
         
         else:
@@ -193,8 +204,7 @@ def bot_procedure():
     finally:
         print("bot finished")
         return register_status, login_status, board_status
-        import pdb; pdb.set_trace()
-        driver.quit()
+
 
 def get_chessboard_status(board_status: bool, chess_move_status: bool, message: str) -> dict:
     return {
@@ -202,3 +212,6 @@ def get_chessboard_status(board_status: bool, chess_move_status: bool, message: 
         "chess_move_status": chess_move_status,
         "message": message
     } 
+    
+    
+    

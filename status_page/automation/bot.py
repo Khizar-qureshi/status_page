@@ -212,6 +212,3 @@ def get_chessboard_status(board_status: bool, chess_move_status: bool, message: 
         "chess_move_status": chess_move_status,
         "message": message
     } 
-    
-    
-    

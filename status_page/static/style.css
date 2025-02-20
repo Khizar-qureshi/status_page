@@ -241,3 +241,17 @@ body {
     white-space: pre-wrap; 
     text-align: center;
 }
+
+
+#fault-injector{
+    background-color: #FA5F5F;
+    width: 115px;
+    height: 30px;
+}
+
+#fault-fixer{
+    width: 115px;
+    background-color: #73D475;
+    height: 30px;
+}
+

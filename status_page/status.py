@@ -9,8 +9,7 @@ from datetime import datetime
 
 app = flask.Flask(__name__, static_folder='static', template_folder='templates')
 
-@app.route('/') 
-def home():
+def get_status_dict():
     timestamp = datetime.now()
     overall_status = 'healthy_container' if get_status.update_status() else 'issue_container'
     status_history_list = get_status.get_status_history(20)
@@ -40,9 +39,6 @@ def home():
     vm2_dn_check_mark =  "✓" if 'healthy' in vm2_dn_circ else "✘"
 
 
-
-    
-
     html_dict = {
         'overall_status': overall_status,
         'vm1_status_circ': vm1_status_circ,
@@ -70,6 +66,13 @@ def home():
         'vm2_dn_check_mark': vm2_dn_check_mark,
         'timestamp': timestamp
     }
+    
+    return html_dict
+
+
+@app.route('/') 
+def home():
+    html_dict = get_status_dict()
 
     return flask.render_template('index.html', **html_dict)
 
@@ -92,9 +95,6 @@ def status():
     vm1_dn_message = get_status.status_data["vm1_dotnet"]["message"]
     vm2_dn_message = get_status.status_data["vm2_dotnet"]["message"]
 
-
-
-    
     flask_status_code = get_status.status_data["home"]["code"]
 
     data = {
@@ -111,6 +111,19 @@ def status():
     }
 
     return jsonify(data), flask_status_code
+
+@app.route('/fault-injector')
+def fault_injector():
+    # Call Fault_injector code
+    html_dict = get_status_dict()
+    return flask.render_template('index.html', **html_dict)
+    
+
+@app.route('/fault-fixer')
+def fault_fixer():
+    #call fault_injector code
+    html_dict = get_status_dict()
+    return flask.render_template('index.html', **html_dict)
 
 if __name__ == '__main__':
     # app.run(host="0.0.0.0", debug = True)

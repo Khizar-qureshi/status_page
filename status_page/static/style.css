@@ -230,7 +230,7 @@ body {
     cursor: pointer;
 }
 
-#status_text {
+.status_text {
     display: flex;
     justify-content: center; 
     align-items: center;
@@ -243,15 +243,30 @@ body {
 }
 
 
-#fault-injector{
+.fault-injector{
     background-color: #FA5F5F;
     width: 115px;
     height: 30px;
 }
 
-#fault-fixer{
+.fault-fixer{
     width: 115px;
     background-color: #73D475;
     height: 30px;
+}
+
+.reload {
+    height: 50px;
+    width: 50px;
+    border: 5px solid black;
+    border-bottom: 5px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg)
+    }
 }
 

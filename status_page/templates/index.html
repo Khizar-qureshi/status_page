@@ -188,6 +188,7 @@
         }
 
         function faultInjector() {
+            document.body.innerHTML = '<div class = "reload"> </div>'
             fetch('/fault-injector')
             .then(response => response.text()) 
             .then(html => {
@@ -197,6 +198,7 @@
         }
         
         function faultFixer() {
+            document.body.innerHTML = '<div class = "reload"> </div>'
             fetch('/fault-fixer')
             .then(response => response.text())
             .then(html => {

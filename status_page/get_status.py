@@ -286,7 +286,7 @@ def get_status_history(days: int) -> list:
         for row in range(days):
             curr_row = next(reader)
             date = format_date(float(curr_row[0]))
-            status = bool(int(curr_row[1]))  # csv stores status as 0 or 1
+            status = not bool(int(curr_row[1]))  # csv stores status as 0 or 1
             status_info = curr_row[2] #this is a string
             print(f"status_info = {status_info}")
             return_queue.appendleft((date, status, status_info))

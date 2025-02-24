@@ -12,9 +12,13 @@
 
     <div class="uptime_container">
         <div class = "uptime_box">
-            {% for status in status_history_list %}
-            <div class="uptime_day {{ 'true' if status else 'false' }}">
-                <span class="uptime_tooltip">Testing Tooltip: Info about that day</span>
+            {% for status_tuple in status_history_list %}
+            <div class="uptime_day {{ 'true' if status_tuple[1] else 'false' }}">
+                {% if status_tuple[1] %}
+                    <span class="uptime_tooltip">{{ status_tuple[0] }}: No Failures</span>
+                {% else %}
+                    <span class="uptime_tooltip">{{ status_tuple[0] }}: {{ status_tuple[2] }}  </span>
+                {% endif %}
             </div>
             {% endfor %}
         </div>

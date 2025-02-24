@@ -207,20 +207,35 @@ def update_status():
     # Update status history (status_history.csv)
     # Updates the history CSV to reflect a failure on the status page history 
     # Also adds a new row in the history CSV when a new day starts
-    df = pd.read_csv("status_history.csv")
-    current_time = time.time()
+    df = pd.read_csv("status_history.csv", sep=';')
+    current_time = time.localtime()
+    midnight_struct = time.struct_time((
+        current_time.tm_year, current_time.tm_mon, current_time.tm_mday, 
+        0, 0, 0,  # Set hours,minutes,seconds to 0
+        current_time.tm_wday, current_time.tm_yday, current_time.tm_isdst
+    ))
+    start_of_today = int(time.mktime(midnight_struct))
     last_entry_time = df.at[0, "start_of_day"]
-    if current_time >= last_entry_time + 86400:
+    if start_of_today >= last_entry_time + 86400:
         new_default_row = pd.DataFrame({
-            "start_of_day": [last_entry_time + 86400], 
-            "status": [1]
-            })
+            "start_of_day": [start_of_today], 
+            "status": [0],
+            "status_info": [0]
+        })
         df = pd.concat([new_default_row, df], ignore_index=True)
-        df.to_csv("status_history.csv", index=False)
-        df = pd.read_csv("status_history.csv")
+        df.to_csv("status_history.csv", sep=';', index=False)
+        df = pd.read_csv("status_history.csv", sep=';')
     if failed_services:
-        df.at[0, "status"] = 0
-        df.to_csv("status_history.csv", index=False) 
+        failures_list_str = None
+        if df.at[0, status_info] == '0':
+            failures_list_str = ', '.join(failed_services)
+        else:
+            old_failures = df.at[0, status_info].split(', ')
+            updated_failed_services = failed_services | set(old_failures)
+            failures_list_str = ', '.join(updated_failed_services)
+        df.at[0, "status_info"] = failures_list_str
+        df.at[0, "status"] = 1
+        df.to_csv("status_history.csv", sep=';', index=False) 
     # End of status history code
 
     # Emailing service
@@ -242,6 +257,16 @@ def update_status():
 
     return len(failed_services) == 0
 
+def format_date(epoch_time):
+    struct_time = time.localtime(epoch_time)
+    day = struct_time.tm_mday  # Get the day
+    month = time.strftime("%b", struct_time)  # Get abbreviated month
+    if 10 <= day % 100 <= 20: # get correct suffix
+        suffix = "th"
+    else:
+        suffix = {1: "st", 2: "nd", 3: "rd"}.get(day % 10, "th")
+
+    return f"{month} {day}{suffix}"
 
 def get_status_history(days: int) -> list:
     '''
@@ -249,7 +274,7 @@ def get_status_history(days: int) -> list:
     '''
     return_queue = deque([])
     with open("status_history.csv", 'r') as csvfile:
-        reader = csv.reader(csvfile)
+        reader = csv.reader(csvfile, delimiter=';')
         header = next(reader) # skip the header
         row_count = sum(1 for row in reader)
         if days > row_count: 
@@ -259,7 +284,11 @@ def get_status_history(days: int) -> list:
         header = next(reader) # skip header
 
         for row in range(days):
-            status = bool(int(next(reader)[1]))  # csv stores status as 0 or 1
-            return_queue.appendleft(status)
+            curr_row = next(reader)
+            date = format_date(float(curr_row[0]))
+            status = bool(int(curr_row[1]))  # csv stores status as 0 or 1
+            status_info = curr_row[2] #this is a string
+            print(f"status_info = {status_info}")
+            return_queue.appendleft((date, status, status_info))
 
     return list(return_queue)

@@ -8,6 +8,7 @@ def restart_webui():
 
 def rename_db():
     os.system('ssh -i ~/.ssh/VM-Key.pem azureuser@onemovechess-api.eastus2.cloudapp.azure.com mv /home/azureuser/.config/*.db /home/azureuser/.config/OneMoveChess.db')
+    restart_api()
 
 restart_api()
 restart_webui()

@@ -31,10 +31,6 @@
 
     <div id = "overall_status" class = {{overall_status}}> Overall Current Status </div>
     <div id = "component-name"> Last status updated : {{timestamp}} </div>
-    <div id = "component-name">
-        <button id  = "fault-injector" class = "fault-injector" onclick = "faultInjector()">Fault Injector</button>
-        <button id = "fault-fixer" class = "fault-fixer" onclick = "faultFixer()">Fault Fixer</button>
-    </div>
     <table id="component-table">
         <tr>
             <td class="cell">
@@ -191,25 +187,7 @@
             document.getElementById('status_modal').style.display = 'none';
         }
 
-        function faultInjector() {
-            document.body.innerHTML = '<div class = "reload"> </div>'
-            fetch('/fault-injector')
-            .then(response => response.text()) 
-            .then(html => {
-                document.body.innerHTML = html; 
-            })
-            .catch(error => console.error('Error:', error));
-        }
-        
-        function faultFixer() {
-            document.body.innerHTML = '<div class = "reload"> </div>'
-            fetch('/fault-fixer')
-            .then(response => response.text())
-            .then(html => {
-                document.body.innerHTML = html;
-            })
-            .catch(error => console.error('Error:', error));
-        }
+
 
         
 

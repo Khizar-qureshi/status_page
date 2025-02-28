@@ -112,18 +112,6 @@ def status():
 
     return jsonify(data), flask_status_code
 
-@app.route('/fault-injector')
-def fault_injector():
-    # Call Fault_injector code
-    html_dict = get_status_dict()
-    return flask.render_template('index.html', **html_dict)
-    
-
-@app.route('/fault-fixer')
-def fault_fixer():
-    #call fault_injector code
-    html_dict = get_status_dict()
-    return flask.render_template('index.html', **html_dict)
 
 if __name__ == '__main__':
     # app.run(host="0.0.0.0", debug = True)

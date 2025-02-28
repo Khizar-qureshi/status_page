@@ -217,7 +217,6 @@ def update_status():
     start_of_today = int(time.mktime(midnight_struct))
     last_entry_time = df.at[0, "start_of_day"]
     if start_of_today >= last_entry_time + 86400:
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!BRUHBRUHBRUHBRUH!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         new_default_row = pd.DataFrame({
             "start_of_day": [start_of_today], 
             "status": [0],
@@ -291,7 +290,6 @@ def get_status_history(days: int) -> list:
             date = format_date(float(curr_row[0]))
             status = not bool(int(curr_row[1]))  # csv stores status as 0 or 1
             status_info = curr_row[2] #this is a string
-            print(f"status_info = {status_info}")
             return_queue.appendleft((date, status, status_info))
 
     return list(return_queue)

@@ -217,6 +217,7 @@ def update_status():
     start_of_today = int(time.mktime(midnight_struct))
     last_entry_time = df.at[0, "start_of_day"]
     if start_of_today >= last_entry_time + 86400:
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!BRUHBRUHBRUHBRUH!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         new_default_row = pd.DataFrame({
             "start_of_day": [start_of_today], 
             "status": [0],
@@ -226,11 +227,13 @@ def update_status():
         df.to_csv("status_history.csv", sep=';', index=False)
         df = pd.read_csv("status_history.csv", sep=';')
     if failed_services:
+        print(df.at[0, "status_info"])
         failures_list_str = None
-        if df.at[0, status_info] == '0':
+
+        if df.at[0, "status_info"] == '0':
             failures_list_str = ', '.join(failed_services)
         else:
-            old_failures = df.at[0, status_info].split(', ')
+            old_failures = df.at[0, "status_info"].split(', ')
             updated_failed_services = failed_services | set(old_failures)
             failures_list_str = ', '.join(updated_failed_services)
         df.at[0, "status_info"] = failures_list_str

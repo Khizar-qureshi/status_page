@@ -17,7 +17,7 @@
                 {% if status_tuple[1] %}
                     <span class="uptime_tooltip">{{ status_tuple[0] }}: No Failures</span>
                 {% else %}
-                    <span class="uptime_tooltip">{{ status_tuple[0] }}: {{ status_tuple[2] }}  </span>
+                    <span class="uptime_tooltip">{{ status_tuple[0] }}: failures with {{ status_tuple[2] }}  </span>
                 {% endif %}
             </div>
             {% endfor %}

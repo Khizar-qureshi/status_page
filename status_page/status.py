@@ -4,6 +4,8 @@ import get_status
 from status_param import IP
 from status_param import Https
 from datetime import datetime
+from fault_injection import fault_fixer
+from fault_injection import fault_injector
 #from status_param import Https, status_data
 
 
@@ -21,10 +23,10 @@ def get_status_dict():
     login_status_circ = 'status-circle-healthy-container' if get_status.status_data["login"]['status'] else 'status-circle-issue-container'
     register_status_circ = 'status-circle-healthy-container' if get_status.status_data["register"]['status'] else 'status-circle-issue-container'
     board_status_circ = 'status-circle-healthy-container' if get_status.status_data["board"]['board_status'] and get_status.status_data["board"]["chess_move_status"] else 'status-circle-issue-container'
-    vm1_sd_circ = 'status-circle-healthy-container' if get_status.status_data["vm1_systemd"]["status"] else 'status-cricle-issue-container'
-    vm2_sd_circ = 'status-circle-healthy-container' if get_status.status_data["vm2_systemd"]["status"] else 'status-cricle-issue-container'
-    vm1_dn_circ = 'status-circle-healthy-container' if get_status.status_data["vm1_dotnet"]["status"] else 'status-cricle-issue-container'
-    vm2_dn_circ = 'status-circle-healthy-container' if get_status.status_data["vm2_dotnet"]["status"] else 'status-cricle-issue-container'
+    vm1_sd_circ = 'status-circle-healthy-container' if get_status.status_data["vm1_systemd"]["status"] else 'status-circle-issue-container'
+    vm2_sd_circ = 'status-circle-healthy-container' if get_status.status_data["vm2_systemd"]["status"] else 'status-circle-issue-container'
+    vm1_dn_circ = 'status-circle-healthy-container' if get_status.status_data["vm1_dotnet"]["status"] else 'status-circle-issue-container'
+    vm2_dn_circ = 'status-circle-healthy-container' if get_status.status_data["vm2_dotnet"]["status"] else 'status-circle-issue-container'
 
 
     vm1_check_mark = "✓" if "healthy" in vm1_status_circ else "✘"
@@ -112,6 +114,22 @@ def status():
 
     return jsonify(data), flask_status_code
 
+@app.route('/fault-injector')
+def fault_inject():
+    # Call Fault_injector code
+    fault_injector.kill_api()
+    fault_injector.kill_webui()
+    html_dict = get_status_dict()
+    return flask.render_template('index.html', **html_dict)
+    
+
+@app.route('/fault-fixer')
+def fault_fix():
+    #call fault_injector code
+    fault_fixer.restart_api()
+    fault_fixer.restart_webui()
+    html_dict = get_status_dict()
+    return flask.render_template('index.html', **html_dict)
 
 if __name__ == '__main__':
     # app.run(host="0.0.0.0", debug = True)

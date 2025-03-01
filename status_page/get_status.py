@@ -57,7 +57,7 @@ def check_vm2_systemd():
 
 def check_vm1_dotnet_running():
     try:
-        command = "ssh -i ~/.ssh/VM-Key.pem azureuser@onemovechess-api.eastus2.cloudapp.azure.com pgrep -l dotnet"
+        command = "ssh -i ~/.ssh/VM-Key.pem azureuser@onemovechess-api.eastus2.cloudapp.azure.com pgrep -l dotnet || true"
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
         if result.returncode == 0 and "dotnet" in result.stdout:
             return {"status": True, "message": "VM1 Dotnet is running."}
@@ -196,13 +196,13 @@ def update_status():
     if not login_status_info["status"]:
         failed_services.add("login")
     if not vm1_dotnet_info["status"]:
-        failed_services.add("vm1 dotnet")
+        failed_services.add("vm1_dotnet")
     if not vm2_dotnet_info["status"]:
-        failed_services.add("vm2 dotnet")
+        failed_services.add("vm2_dotnet")
     if not vm1_sd_info["status"]:
-        failed_services.add("vm1 system domain")
+        failed_services.add("vm1_systemd")
     if not vm2_sd_info["status"]:
-        failed_services.add("vm2 system domain")
+        failed_services.add("vm2_systemd")
 
     # Update status history (status_history.csv)
     # Updates the history CSV to reflect a failure on the status page history 
@@ -226,9 +226,7 @@ def update_status():
         df.to_csv("status_history.csv", sep=';', index=False)
         df = pd.read_csv("status_history.csv", sep=';')
     if failed_services:
-        print(df.at[0, "status_info"])
         failures_list_str = None
-
         if df.at[0, "status_info"] == '0':
             failures_list_str = ', '.join(failed_services)
         else:
@@ -250,6 +248,7 @@ def update_status():
                 details.append(f"{service.capitalize()} page error: {s['message']}")
             body = "\n".join(details)
             send_alert_email(subject, body)
+            print("email sent!")
         else:
             subject = "All services recovered"
             body = "All services are now healthy."
@@ -293,3 +292,6 @@ def get_status_history(days: int) -> list:
             return_queue.appendleft((date, status, status_info))
 
     return list(return_queue)
+
+a = check_vm1_dotnet_running()
+print(a)

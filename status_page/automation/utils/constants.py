@@ -7,6 +7,7 @@ class Login:
     username = "testbot2"
     password = "nL12^Cj3P=rcMq1Sw4Dq%!p2"
     password2 = "O-u+dw7e2O960Yjq=ZJ$-^4e"
+    password3 = "+cVw-Dha=9V0vU5dr3a9yFrm"
     cookies_file_path = "automation/utils/cookies.json"
     link = "http://onemovechess-web.northcentralus.cloudapp.azure.com/Login"
 

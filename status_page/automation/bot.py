@@ -75,14 +75,26 @@ def login_to_game(driver):
         username.send_keys(Login.username)
         signupcode = driver.find_element(By.ID, 'password')
         signupcode.send_keys(Login.password)
-
         submit = driver.find_element(By.ID, 'loginButton')
         submit.click()
         Time.sleep()
         login_block = driver.find_element(By.ID, 'accountLink')
         db = "OPT"
+        
         if Login.username not in login_block.text:
-            #Opt password does not work, trying confgi password
+            #Opt password does not work, trying config password
+            print("password for opt failed... Trying new config password.")
+            signupcode.clear()
+            signupcode.send_keys(Login.password3)
+            submit.click()
+            db = "config"
+            Time.sleep()
+            print("Finished logging in with config password.")
+    
+        login_block = driver.find_element(By.ID, 'accountLink')
+
+        if Login.username not in login_block.text:
+            #Opt password does not work, trying config password
             print("password for opt failed... Trying config password.")
             signupcode.clear()
             signupcode.send_keys(Login.password2)
@@ -90,11 +102,11 @@ def login_to_game(driver):
             db = "config"
             Time.sleep()
             print("Finished logging in with config password.")
+        
         # grab log in block again 
         login_block = driver.find_element(By.ID, 'accountLink')
         
         if Login.username in login_block.text:
-            print("entered here!")
             return login_status(True, f"Login created successfully. Current database : {db}.")
         else:
             message = driver.find_element(By.XPATH, "/html/body/div/main/form/div[1]/div[3]").text

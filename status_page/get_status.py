@@ -293,5 +293,3 @@ def get_status_history(days: int) -> list:
 
     return list(return_queue)
 
-a = check_vm1_dotnet_running()
-print(a)

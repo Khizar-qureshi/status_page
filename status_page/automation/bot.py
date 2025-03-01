@@ -113,7 +113,7 @@ def login_to_game(driver):
             return login_status(False, f"Login failed for both OPT and Config. Error code: {message}")
     except Exception as e:
         print(f"Login FAILED Error: {e}", )
-        return login_status(False, f'Login bot failed. Database is unkown. Error: {e}')
+        return login_status(False, f'Login bot failed for all 3 passwords. Database is unkown.')
         
 
 def find_first_move(driver):
@@ -170,7 +170,7 @@ def bot_register(driver):
         
         else:
             print("No password shown")
-            return register_status(False, "Registration Failed! Errror: Bot failed to retrieve password block.")
+            return register_status(False, "Registration Failed! Error: Bot failed to retrieve password block.")
         
     except Exception:
         return register_status(False, 'Register Broke causing register to fail')

@@ -83,7 +83,7 @@ def login_to_game(driver):
         
         if Login.username not in login_block.text:
             #Opt password does not work, trying config password
-            print("password for opt failed... Trying new config password.")
+            print("password for opt failed... Trying new config 1s password.")
             signupcode.clear()
             signupcode.send_keys(Login.password3)
             submit.click()
@@ -95,20 +95,33 @@ def login_to_game(driver):
 
         if Login.username not in login_block.text:
             #Opt password does not work, trying config password
-            print("password for opt failed... Trying config password.")
+            print("password for opt and config 1 failed... Trying config 2 password.")
             signupcode.clear()
             signupcode.send_keys(Login.password2)
             submit.click()
             db = "config"
             Time.sleep()
-            print("Finished logging in with config password.")
         
         # grab log in block again 
         login_block = driver.find_element(By.ID, 'accountLink')
         
-        if Login.username in login_block.text:
+        if Login.username not in login_block.text:
+            print("password for testbot2 all failed...trying login-bot")
+            signupcode.clear()
+            username.clear()
+            username.send_keys(Login.username2)
+            signupcode.send_keys(Login.password4)
+            submit.click()
+            db = "config2"
+            Time.sleep()
+           
+        login_block = driver.find_element(By.ID, 'accountLink')
+
+        if Login.username in login_block.text or Login.username2 in login_block.text:
+            print("Logged in sucessfully")
             return login_status(True, f"Login created successfully. Current database : {db}.")
         else:
+            print("Log in failed!")
             message = driver.find_element(By.XPATH, "/html/body/div/main/form/div[1]/div[3]").text
             return login_status(False, f"Login failed for both OPT and Config. Error code: {message}")
     except Exception as e:

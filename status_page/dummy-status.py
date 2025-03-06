@@ -251,7 +251,7 @@ def fault_inject():
   # fault_injector.kill_api()
   #  fault_injector.kill_webui()
     html_dict = get_status_dict_bad()
-    time.sleep(10)
+    time.sleep(5)
     return flask.render_template('index.html', **html_dict)
     
 
@@ -261,9 +261,8 @@ def fault_fix():
    #fault_fixer.restart_api()
     #fault_fixer.restart_webui()
     html_dict = get_status_dict_good()
-    time.sleep(2)
     return flask.render_template('index.html', **html_dict)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug = True)
-    # app.run(debug = True)
+    #app.run(debug = True)

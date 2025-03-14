@@ -27,8 +27,8 @@ This github repositary contains the codebase for the status page for the One Mov
 - [Folders Organization](#folders)
 - [Instructions](#instructions)
 - [Credits](#credits)
-- [Required Packages](#RequiredPackages)
-- [Additional Requirement](#AddtionalRequirements)
+- [Required Packages](#Required Packages)
+- [Additional Requirement](#Addtional Requirements)
 - [Contact](#Contact)
 
 

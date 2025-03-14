@@ -24,11 +24,11 @@ This GitHub repository contains the codebase for the status page for the One Mov
 ## Contents
 
 - [Description](#description)
-- [Folders Organization](#folders)
-- [Instructions](#instructions)
-- [Credits](#credits)
 - [Required Packages](#Required-Packages)
 - [Additional Requirements](#Additional-Requirements)
+- [Instructions](#instructions)
+- [Folders Organization](#folders)
+- [Credits](#credits)
 - [Contact](#Contact)
 
 

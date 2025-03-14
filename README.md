@@ -59,7 +59,7 @@ To run this app locally, run python3 /status_page/status.py
 
 Step 2: 
 
-A link will show up in the terminal and will look simmilar to http://127.0.0.1:5000/. Copy the url of that link to your browser.
+A link will show up in the terminal and will look similar to http://127.0.0.1:5000/. Copy the URL of that link to your browser.
 
 Step 3: 
 

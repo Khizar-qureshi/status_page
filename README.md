@@ -39,12 +39,19 @@ The One Move Chess Status Page provides real-time updates on the game's performa
 
 ## Required Packages
 To launch this status page, ensure the following packages are installed: 
+
 Flask - Web framework for building the status page 
+
 Selenium - Automates web interactions to simulate Human-Computer Interaction
+
 Pandas - Handles data processing
+
 Requests - Sends HTTP requests
+
 Fake UserAgent - Generates random user-agent headers
+
 Undetected Chromedriver - Helps bypass bot detection in Chrome
+
 
 ## Additional Requirements
 Make sure you have the correct version of ChromeDriver installed. You can find the appropriate version and installation instructions here: https://sites.google.com/chromium.org/driver/.

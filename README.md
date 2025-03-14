@@ -28,7 +28,7 @@ This GitHub repository contains the codebase for the status page for the One Mov
 - [Instructions](#instructions)
 - [Credits](#credits)
 - [Required Packages](#Required-Packages)
-- [Additional Requirements](#Addtional-Requirements)
+- [Additional Requirements](#Additional-Requirements)
 - [Contact](#Contact)
 
 

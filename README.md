@@ -1,8 +1,6 @@
 # Status Page
 One Move Chess Status Page
 
-# Status Page
-
 ## Abstract
 
 This GitHub repository contains the codebase for the status page for the One Move Chess Game. 
